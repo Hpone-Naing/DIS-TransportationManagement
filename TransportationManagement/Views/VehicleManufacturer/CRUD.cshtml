@@ -1,0 +1,159 @@
+﻿@model TransportationManagement.ViewModels.ManufacturerView
+@{
+    ViewData["Title"] = "CRUD";
+}
+
+<div id="spinner-container">
+    <img id="spinner" decoding="async" src="~/image/loading/spinner.gif" asp-append-version="true" />
+</div>
+
+<div class="d-flex justify-content-center align-item-center pb-4">
+    <label class="text-primary h4"> မောင်တော်ယာဥ်အချက်အလက်စာရင်း</label>
+</div>
+@if (TempData.ContainsKey("Message") && TempData.ContainsKey("CssColor"))
+{
+    <div class="alert @TempData["CssColor"]"> @TempData["Message"] </div>
+}
+<div style="background-color: #e1e135ed;" class="row mt-3 border border-dark">
+
+    <div class="d-flex justify-content-center align-item-center p-1">
+        <label class="text-black"> မော်တော်ယာဥ်အချက်အလက်များ </label>
+    </div>
+</div>
+
+<a id="createBtn" class="mt-3 btn btn-outline-primary rounded-pill">New+</a>
+
+<div class="row"> 
+    <div class="col-lg-8 col-md-8 col-sm-12 mt-3">
+        <div class="table-responsive">
+            <table class="table table-bordered  table-striped">
+                <thead style="background-color: #3e81aa;">
+                    <tr>
+                        <th class="text-white">စဥ်</th>
+                        <th class="text-white">
+                            ယာဥ်အမျိုးအစား
+                        </th>
+                        <th class="text-white">လုပ်ဆောင်ချက်များ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int i = 0;
+                    }
+                    @foreach (var item in Model.ManufacturerList)
+                    {
+                        <tr>
+                            <td class="pkId" style="display:none;">
+                                <input type="hidden" class="manufacturerPkid" value="@item.ManufacturerPkid" />
+                            </td>
+                            <td>
+                                @{
+                                    i++;
+                                }
+                                @i
+                            </td>
+                            <td class="manufacturerName">
+                                @Html.DisplayFor(modelItem => item.ManufacturerName)
+                            </td>
+
+                            <td class="d-flex justify-content-center align-item-center">
+                                <a class="editBtn btn btn-outline me-3" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-duotone fa-pencil fa-lg" style="color:black"></i></a>
+                                <a class="deleteBtn btn btn-outline" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-regular fa-trash fa-lg text-danger"></i></a>
+                                @*<button class="btn btn-outline" type="button" data-toggle="tooltip" data-placement="top" title="Delete" data-bs-toggle="modal" data-bs-target=" @("#deleteModel" + @item.ManufacturerPkid)"><i class="fas fa-regular fa-trash fa-lg text-danger"></i></button>*@
+                            </td>
+                            
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @if (Model != null && Model.ManufacturerList.Any())
+            {
+                var prevDisabled = !Model.ManufacturerList.HasPreviousPage ? "disabled" : "";
+                var nextDisabled = !Model.ManufacturerList.HasNextPage ? "disabled" : "";
+                var totalPageNo = Model.ManufacturerList.TotalPageNo;
+                var currentPageNo = Model.ManufacturerList.PageIndex;
+
+                <a asp-action="List"
+                   asp-route-pageNo="@(Model.ManufacturerList.PageIndex - 1)"
+                   class="link btn btn-primary btn-sm @prevDisabled">
+                    Previous
+                </a>
+                <a asp-action="List"
+                   asp-route-pageNo="@(Model.ManufacturerList.PageIndex + 1)"
+                   class="link btn btn-primary btn-sm @nextDisabled">
+                    Next
+                </a>
+                <span>
+                    Page No : @currentPageNo of @totalPageNo
+                </span>
+            }
+            else
+            {
+                <span>No data available</span>
+            }
+
+        </div>
+    </div>
+
+    <div id="create" class="col-lg-4 col-md-4 col-sm-12 mt-3 shadow rounded" style="display:none;background-color: silver;">
+        <div class="d-flex justify-content-between mb-3 mt-1" style="/*! background-color: yellow; */">
+            <div class="">အချက်အလက်များထည့်သွင်းရန်</div>
+            <div class="d-flex justify-content-end mt-3 ms-4" style="cursor: pointer;" onclick="hideForm('create')">
+                <i class="fas fa-light fa-rectangle-xmark fa-xl"></i>
+            </div>
+        </div>
+        <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Manufacturer.ManufacturerName" class="control-label"></label>
+                <input id="manufacturerNameCreate" asp-for="Manufacturer.ManufacturerName" class="form-control" required/>
+                    <span asp-validation-for="Manufacturer.ManufacturerName" class="text-danger"></span>
+                </div>
+                <div class="d-flex justify-content-center align-item-center mt-2">
+                    <input type="submit" value="Create" class="btn btn-default">
+                </div>
+            </form>
+    </div>
+
+    <div id="edit" class="col-lg-4 col-md-4 col-sm-12 mt-3 shadow rounded" style="display:none;background-color: silver;">
+        <div class="d-flex justify-content-between mb-3 mt-1">
+            <div class="">အချက်အလက်များပြင်ဆင်ရန်</div>
+            <div class="d-flex justify-content-end mt-3 ms-4" style="cursor: pointer;" onclick="hideForm('edit')">
+                <i class="fas fa-light fa-rectangle-xmark fa-xl"></i>
+            </div>
+        </div>
+        <form asp-action="Edit">
+            <input type="hidden" id="editManufacturerPkId" name="Id" />
+            <input type="hidden" name="pageNo" value="@Model.ManufacturerList.PageIndex" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Manufacturer.ManufacturerName" class="control-label"></label>
+                <input id="manufacturerNameEdit" asp-for="Manufacturer.ManufacturerName" class="form-control" required />
+                <span asp-validation-for="Manufacturer.ManufacturerName" class="text-danger"></span>
+            </div>
+            <div class="d-flex justify-content-center align-item-center mt-2">
+                <input type="submit" value="Edit" class="btn btn-default">
+            </div>
+        </form>
+    </div>
+    
+    <div id="delete" class="col-lg-4 col-md-4 col-sm-12 mt-3 shadow rounded" style="display:none;background-color: silver;">
+        <div class="d-flex justify-content-between mb-3 mt-1">
+            <div class="">အချက်အလက်များဖျက်ရန်</div>
+            <div class="d-flex justify-content-end mt-3 ms-4" style="cursor: pointer;" onclick="hideForm('delete')">
+                <i class="fas fa-light fa-rectangle-xmark fa-xl"></i>
+            </div>
+        </div>
+        <form asp-action="Delete">
+            <input type="hidden" id="deleteManufacturerPkId" name="Id"/>
+            <input type="hidden" name="pageNo" value="@Model.ManufacturerList.PageIndex" />
+            <div>
+                Are you sure want to delete<span class="text-danger" id="manufacturerNameDelete"></span>?
+            </div>
+            <div class="d-flex justify-content-center align-item-center mt-3">
+                <input type="submit" value="Delete" class="btn btn-danger">
+            </div>
+        </form>
+    </div>
+
+</div>
