@@ -142,6 +142,7 @@ namespace TransportationManagement.Controllers.VechicleData
 
             VehicleData vehicleData = _serviceFactory.CreateVehicleDataService().FindVehicleDataById(Id);
             AddViewBag();
+            ViewBag.YBSTypes = _serviceFactory.CreateYBSTypeService().GetSelectListYBSTypesByYBSCompanyId(vehicleData.YBSCompany.YBSCompanyPkid);
             return View(vehicleData);
         }
 
@@ -171,6 +172,7 @@ namespace TransportationManagement.Controllers.VechicleData
             {
                 Utility.AlertMessage(this, "Edit Fail.Internal Server Error", "alert-danger");
                 AddViewBag();
+                ViewBag.YBSTypes = _serviceFactory.CreateYBSTypeService().GetSelectListYBSTypesByYBSCompanyId(vehicleData.YBSCompany.YBSCompanyPkid);
                 return View();
             }
         }

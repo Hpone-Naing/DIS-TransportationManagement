@@ -8,5 +8,6 @@ namespace TransportationManagement.Services
         List<YBSType> GetUniqueYBSTypes();
         List<YBSType> GetUniqueYBSTypesByYBSCompanyId(int ybsCompanyId = 1);
         List<SelectListItem> GetSelectListYBSTypesByYBSCompanyId(int ybsCompanyId = 1);
+        List<YBSType> GetAllYBSTypes();
     }
 }
