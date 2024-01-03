@@ -29,8 +29,7 @@ namespace TransportationManagement.Services.Impl
             }
             else if (advanceSearch.CngQty != null || advanceSearch.CctvInstalled != null || advanceSearch.TotalBusStop != null)
             {
-                resultList = AdvanceSearch(advanceSearch, _context.VehicleDatas);
-                Console.WriteLine("size: " + resultList.Count);
+                resultList = AdvanceSearch(advanceSearch, _context.VehicleDatas).Where(vehicleData => !vehicleData.IsDeleted).ToList();
             }
             else
             {
