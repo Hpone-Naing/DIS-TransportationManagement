@@ -2,6 +2,7 @@
 {
     public class AdvanceSearch
     {
+        public String POSInstalled { get; set; }
         public String CngQty { get; set; }
         public String CctvInstalled { get; set; }
         public String Option { get; set; }

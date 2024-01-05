@@ -22,7 +22,7 @@ namespace TransportationManagement.Services.Impl
 
         public List<Manufacturer> GetUniqueManufacturers()
         {
-            return GetUniqueList(manufacturer => manufacturer.ManufacturerPkid);
+            return GetUniqueList(manufacturer => manufacturer.ManufacturerPkid).Where(manufacturer => !manufacturer.IsDeleted).ToList();
         }
 
         public Manufacturer FindManufacturerById(int id)

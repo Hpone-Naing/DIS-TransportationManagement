@@ -27,7 +27,7 @@ namespace TransportationManagement.Services.Impl
                             .AsQueryable()
                             .ToList();
             }
-            else if (advanceSearch.CngQty != null || advanceSearch.CctvInstalled != null || advanceSearch.TotalBusStop != null)
+            else if (advanceSearch.POSInstalled != null || advanceSearch.CctvInstalled != null || advanceSearch.TotalBusStop != null)
             {
                 resultList = AdvanceSearch(advanceSearch, _context.VehicleDatas).Where(vehicleData => !vehicleData.IsDeleted).ToList();
             }

@@ -57,7 +57,7 @@ namespace TransportationManagement.Services.Impl
         private IQueryable<T> FiltersWithoutAdvSearchOptions<T>(IQueryable<T> query, AdvanceSearch advanceSearch) where T : class
         {
             return query.Where(obj =>
-                (!string.IsNullOrEmpty(advanceSearch.CngQty) && EF.Property<string>(obj, "CngQty") != null && EF.Property<string>(obj, "CngQty").ToLower().Contains(advanceSearch.CngQty.ToLower()))
+                (!string.IsNullOrEmpty(advanceSearch.POSInstalled) && EF.Property<string>(obj, "POSInstalled") != null && EF.Property<string>(obj, "POSInstalled").ToLower().Contains(advanceSearch.POSInstalled.ToLower()))
                 || (!string.IsNullOrEmpty(advanceSearch.CctvInstalled) && EF.Property<string>(obj, "CctvInstalled") != null && EF.Property<string>(obj, "CctvInstalled").ToLower().Contains(advanceSearch.CctvInstalled.ToLower()))
                 );
         }
