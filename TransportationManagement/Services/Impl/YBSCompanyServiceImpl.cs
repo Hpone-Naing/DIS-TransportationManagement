@@ -12,12 +12,7 @@ namespace TransportationManagement.Services.Impl
 
         public List<YBSCompany> GetAllYBSCompanys()
         {
-            return GetAll();
-        }
-
-        public List<YBSCompany> GetUniqueYBSCompanys()
-        {
-            return GetUniqueList(ybscompany => ybscompany.YBSCompanyPkid);
+            return GetAll().Where(ybsCompany => !ybsCompany.IsDeleted).ToList();
         }
 
         public List<SelectListItem> GetSelectListYBSCompanys()
@@ -40,9 +35,37 @@ namespace TransportationManagement.Services.Impl
             return lstYBSCompanys;
         }
 
-        public bool CreateYBSCompany(YBSCompany ybsCompany)
+        
+
+        public PagingList<YBSCompany> GetAllYBSCompanysWithPagin(int? pageNo, int PageSize)
         {
-            return Create(ybsCompany);
+            return GetAllWithPagin(GetAllYBSCompanys(), pageNo, PageSize);
+        }
+
+        public List<YBSCompany> GetUniqueYBSCompanys()
+        {
+            return GetUniqueList(yBSCompany => yBSCompany.YBSCompanyPkid).Where(yBSCompany => !yBSCompany.IsDeleted).ToList();
+        }
+
+        public YBSCompany FindYBSCompanyById(int id)
+        {
+            return FindById(id);
+        }
+
+        public bool CreateYBSCompany(YBSCompany yBSCompany)
+        {
+            yBSCompany.IsDeleted = false;
+            return Create(yBSCompany);
+        }
+        public bool EditYBSCompany(YBSCompany yBSCompany)
+        {
+            return Update(yBSCompany);
+        }
+
+        public bool DeleteYBSCompany(YBSCompany yBSCompany)
+        {
+            yBSCompany.IsDeleted = true;
+            return Update(yBSCompany);
         }
     }
 }

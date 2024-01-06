@@ -48,4 +48,9 @@
     }
 }
 
+.hideImportant {
+    display: none !important;
+}
+
+
 

@@ -14,5 +14,7 @@ namespace TransportationManagement.Models
         [ForeignKey("YBSCompany")]
         public int YBSCompanyPkid { get; set; }
         public virtual YBSCompany YBSCompany { get; set; }
+        public bool IsDeleted { get; set; }
+
     }
 }

@@ -23,28 +23,31 @@
 </div>
 
 <div class="row mt-3 search-container">
-    <div class="col">
+    <div class="col-lg-9 col-sm-12">
         <form class="input-group" method="get" action="@Configuration.GetSection("AppUrls").GetSection("TestUrl").Value/VehicleData/List">
             <div class="col">
-                <input type="text" class="form-control" name="SearchString" placeholder="[Enter Keywords to Search]">
+                <input type="text" class="form-control" name="SearchString" placeholder="[Enter Keywords to Search]" style="border-top-left-radius:50px; border-bottom-left-radius:50px;">
             </div>
             <div class="input-group-append">
-                <button type="submit" class="btn btn-primary btn-md"><i class="fa fa-search"></i></button>
+                <input class="btn btn-outline-primary btn-md advance-search-btn" type="button" data-bs-toggle="modal" data-bs-target="#advanceSearchModel" value="Advance Search" style="border-top-right-radius:50px; border-bottom-right-radius:50px;" />
+                <div class="btn btn-outline-primary btn-md advance-search-btn-swl-510" data-bs-toggle="modal" data-bs-target="#advanceSearchModel" style="border-top-right-radius: 50px;border-bottom-right-radius: 50px;">
+                    <i class="fa fa-search"></i>
+                </div>
             </div>
         </form>
     </div>
 
-    <div class="col-4 col-sm-4 col-md-4 advance-search-btn">
+    @*<div class="col-4 col-sm-4 col-md-4 advance-search-btn">
         <input class="btn btn-primary btn-md" type="button" data-bs-toggle="modal" data-bs-target="#advanceSearchModel" value="Advance Search" />
     </div>
 
     <div class="col-1 col-sm-1 col-md-1 mt-1 advance-search-btn-swl-510 justify-content-center align-self-center me-2">
         <i class="fa fa-solid fa-magnifying-glass-plus me-3 fa-xl" data-bs-toggle="modal" data-bs-target="#advanceSearchModel" style="color: #367fa9;/*! width: 300px; *//*! height: 300px; */" class="fa fa-solid fa-magnifying-glass-plus advance-search-btn-swl-510 me-3 fa-xl"></i>
-    </div>
+    </div>*@
 </div>
 
 
-<div class="table-responsive mt-2">
+<div class="table-responsive mt-2 rounded">
     <table class="table table-bordered  table-striped">
         <thead style="background-color: #3e81aa;">
             <tr>

@@ -11,17 +11,38 @@ namespace TransportationManagement.Services.Impl
 
         public List<FuelType> GetAllFuelTypes()
         {
-            return GetAll();
+            return GetAll().Where(fuelType => !fuelType.IsDeleted).ToList();
+        }
+
+        public PagingList<FuelType> GetAllFuelTypesWithPagin(int? pageNo, int PageSize)
+        {
+            return GetAllWithPagin(GetAllFuelTypes(), pageNo, PageSize);
         }
 
         public List<FuelType> GetUniqueFuelTypes()
         {
-            return GetUniqueList(fuelType => fuelType.FuelTypePkid);
+            return GetUniqueList(fuelType => fuelType.FuelTypePkid).Where(fuelType => !fuelType.IsDeleted).ToList();
+        }
+
+        public FuelType FindFuelTypeById(int id)
+        {
+            return FindById(id);
         }
 
         public bool CreateFuelType(FuelType fuelType)
         {
+            fuelType.IsDeleted = false;
             return Create(fuelType);
+        }
+        public bool EditFuelType(FuelType fuelType)
+        {
+            return Update(fuelType);
+        }
+
+        public bool DeleteFuelType(FuelType fuelType)
+        {
+            fuelType.IsDeleted = true;
+            return Update(fuelType);
         }
     }
 }

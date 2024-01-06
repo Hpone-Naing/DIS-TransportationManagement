@@ -8,11 +8,13 @@ namespace TransportationManagement.Factories.Impl
     {
         private readonly HumanResourceManagementDBContext _context;
         private readonly DriverService _driverService;
+        private readonly YBSCompanyService _ybsCompanyService;
 
-        public ServiceFactoryImpl(HumanResourceManagementDBContext context, DriverService driverService)
+        public ServiceFactoryImpl(HumanResourceManagementDBContext context, DriverService driverService, YBSCompanyService ybsCompanyService)
         {
             _context = context;
             _driverService = driverService;
+            _ybsCompanyService = ybsCompanyService;
         }
 
         public UserService CreateUserService()
@@ -42,7 +44,7 @@ namespace TransportationManagement.Factories.Impl
         }
         public YBSTypeService CreateYBSTypeService()
         {
-            return new YBSTypeServiceImpl(_context);
+            return new YBSTypeServiceImpl(_context, _ybsCompanyService);
         }
         public DriverService CreateDriverService()
         {

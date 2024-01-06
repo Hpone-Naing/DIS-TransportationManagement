@@ -229,10 +229,11 @@
         @*<li><a href="@Url.Action("Dashboard", "Home")"><i class="fa fa-home" style="font-size:20px;"></i> <span>ပင်မစာမျက်နှာ</span></a></li>*@
         @{
                         
+                       
                         <li class="treeview active menu-open">
                             <a href="#" class="active">
                                 <i class="fa fa-list"></i>
-                                <span style=" font-size: 20px;">မော်တော်ယာဥ်အချက်အလက်</span>
+                                <span style=" font-size: 16px;">YBSCompany Information</span>
 
                                 <span class="pull-right-container">
                                     <i class="fa fa-angle-left pull-right"></i>
@@ -240,10 +241,7 @@
                             </a>
                             <ul class="treeview-menu">
                                 <li>
-                                    <a class="link active" href="@Url.Action("List", "VehicleData")" style="font-size: 16px;"><i class=""></i>အချက်အလက်များ</a>
-                                </li>
-                                <li>
-                                    <a class="link active" href="@Url.Action("Create", "VehicleData")" style="font-size: 16px;"><i class=""></i>စာရင်းသွင်းရန်</a>
+                                    <a class="link active" href="@Url.Action("List", "YBSCompany")" style="font-size: 14px;"><i class=""></i><span class="fa-solid fa-book d-flex"><label class="ms-2">အချက်အလက်များ</label></span></a>
                                 </li>
                             </ul>
                         </li>
@@ -251,7 +249,7 @@
                         <li class="treeview active menu-open">
                             <a href="#" class="active">
                                 <i class="fa fa-list"></i>
-                                <span style=" font-size: 20px;">မော်တော်ယာဥ်အမျိုးအစားအချက်အလက်</span>
+                                <span style=" font-size: 16px;">YBSType Information</span>
 
                                 <span class="pull-right-container">
                                     <i class="fa fa-angle-left pull-right"></i>
@@ -259,10 +257,62 @@
                             </a>
                             <ul class="treeview-menu">
                                 <li>
-                                    <a class="link active" href="@Url.Action("List", "VehicleManufacturer")" style="font-size: 16px;"><i class=""></i>အချက်အလက်များ</a>
+                                    <a class="link active" href="@Url.Action("List", "YBSType")" style="font-size: 14px;"><i class=""></i><span class="fa-solid fa-book d-flex"><label class="ms-2">အချက်အလက်များ</label></span></a>
                                 </li>
                             </ul>
                         </li>
+
+                        <li class="treeview active menu-open">
+                            <a href="#" class="active">
+                                <i class="fa fa-list"></i>
+                                <span style=" font-size: 16px;">Manufacturer Information</span>
+
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li>
+                                    <a class="link active" href="@Url.Action("List", "VehicleManufacturer")" style="font-size: 14px;"><i class=""></i><span class="fa-solid fa-book d-flex"><label class="ms-2">အချက်အလက်များ</label></span></a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="treeview active menu-open">
+                            <a href="#" class="active">
+                                <i class="fa fa-list"></i>
+                                <span style=" font-size: 16px;">FuelType Information</span>
+
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li>
+                                    <a class="link active" href="@Url.Action("List", "FuelType")" style="font-size: 14px;"><i class=""></i><span class="fa-solid fa-book d-flex"><label class="ms-2">အချက်အလက်များ</label></span></a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="treeview active menu-open">
+                            <a href="#" class="active">
+                                <i class="fa fa-list"></i>
+                                <span style=" font-size: 16px;">Vehicle Information</span>
+
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li>
+                                    <a class="link active" href="@Url.Action("List", "VehicleData")" style="font-size: 14px;"><i class=""></i><span class="fa-solid fa-book d-flex"><label class="ms-2">အချက်အလက်များ</label></span></a>
+                                </li>
+                                <li>
+                                    <a class="link active" href="@Url.Action("Create", "VehicleData")" style="font-size: 14px;"><i class=""></i><span class="fa-solid fa-circle-plus"><label class="ms-2">စာရင်းသွင်းရန်</label></span></a>
+                                </li>
+                            </ul>
+                        </li>
+
 
                         @*<li class="treeview active menu-open">
                             <a href="#" class="active">
@@ -397,7 +447,7 @@
     @*<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>*@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.1/js/bootstrap.bundle.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="~/js/vehicleData.js" asp-append-version="true"></script>
-    <script src="~/js/manufacturer.js" asp-append-version="true"></script>
+    <script src="~/js/ybsType.js" asp-append-version="true"></script>
     <script src="~/js/spinner.js" asp-append-version="true"></script>
 
 

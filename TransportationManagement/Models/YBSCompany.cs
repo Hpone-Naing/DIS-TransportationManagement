@@ -8,5 +8,7 @@
 
         [StringLength(100)]
         public string YBSCompanyName { get; set; }
+
+        public bool IsDeleted { get; set; }
     }
 }

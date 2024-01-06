@@ -8,5 +8,7 @@
 
         [StringLength(50)]
         public string FuelTypeName { get; set; }
+        public bool IsDeleted { get; set; }
+
     }
 }

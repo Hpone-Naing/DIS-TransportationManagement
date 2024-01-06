@@ -140,8 +140,8 @@ namespace TransportationManagement.Controllers.VechicleData
             if (!SessionUtil.IsActiveSession(HttpContext))
                 return RedirectToAction("Index", "Login");
 
-            VehicleData vehicleData = _serviceFactory.CreateVehicleDataService().FindVehicleDataById(Id);
             AddViewBag();
+            VehicleData vehicleData = _serviceFactory.CreateVehicleDataService().FindVehicleDataById(Id);
             ViewBag.YBSTypes = _serviceFactory.CreateYBSTypeService().GetSelectListYBSTypesByYBSCompanyId(vehicleData.YBSCompany.YBSCompanyPkid);
             return View(vehicleData);
         }

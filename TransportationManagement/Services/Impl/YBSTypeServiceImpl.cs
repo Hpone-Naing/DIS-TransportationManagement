@@ -7,23 +7,30 @@ namespace TransportationManagement.Services.Impl
 {
     public class YBSTypeServiceImpl : AbstractServiceImpl<YBSType>, YBSTypeService
     {
-        public YBSTypeServiceImpl(HumanResourceManagementDBContext context) : base(context)
+        private readonly YBSCompanyService _ybsCompanyService;
+        public YBSTypeServiceImpl(HumanResourceManagementDBContext context, YBSCompanyService ybsCompanyService) : base(context)
         {
+            _ybsCompanyService = ybsCompanyService;
         }
 
         public List<YBSType> GetAllYBSTypes()
         {
-            return GetAll();
+            return GetAll().Where(ybsType => !ybsType.IsDeleted).ToList();
         }
 
         public List<YBSType> GetUniqueYBSTypes()
         {
-            return GetUniqueList(ybsType => ybsType.YBSTypePkid);
+            return GetUniqueList(ybsType => ybsType.YBSTypePkid).Where(ybsType => !ybsType.IsDeleted).ToList();
         }
 
         public List<YBSType> GetUniqueYBSTypesByYBSCompanyId(int ybsCompanyId = 1)
         {
-            return GetListByIntVal("YBSCompanyPkid", ybsCompanyId);
+            return GetListByIntVal("YBSCompanyPkid", ybsCompanyId).Where(ybsType => !ybsType.IsDeleted).ToList();
+        }
+
+        public PagingList<YBSType> GetAllYBSTypesWithPagin(int? pageNo, int PageSize)
+        {
+            return GetAllWithPagin(GetAllYBSTypes(), pageNo, PageSize);
         }
 
         public List<SelectListItem> GetSelectListYBSTypesByYBSCompanyId(int ybsCompanyId = 1)
@@ -46,11 +53,29 @@ namespace TransportationManagement.Services.Impl
             return lstYBSTypes;
         }
 
-        
-
-        public bool CreateYBSType(YBSType ybsType)
+        public YBSType FindYBSTypeById(int id)
         {
-            return Create(ybsType);
+            return FindById(id);
+        }
+
+        public bool CreateYBSType(int ybsCompanyPkId, YBSType yBSType)
+        {
+            YBSCompany ybsCompany = _ybsCompanyService.FindYBSCompanyById(ybsCompanyPkId);
+            yBSType.YBSCompany = ybsCompany;
+            yBSType.IsDeleted = false;
+            return Create(yBSType);
+        }
+        public bool EditYBSType(int ybsCompanyPkId, YBSType yBSType)
+        {
+            YBSCompany ybsCompany = _ybsCompanyService.FindYBSCompanyById(ybsCompanyPkId);
+            yBSType.YBSCompany = ybsCompany;
+            return Update(yBSType);
+        }
+
+        public bool DeleteYBSType(YBSType yBSType)
+        {
+            yBSType.IsDeleted = true;
+            return Update(yBSType);
         }
     }
 }
