@@ -26,7 +26,14 @@
     <select id="lstYBSTypeId" class="form-control" asp-items="@Model.YBSCompanyList" asp-for="SelectedYBSCompany" onchange="FillYBSTypeListByYBSCompany(this, 'ybsTypes');" required style="border-radius: 50px;border-color: #474848;"></select>
 </div>
 
-<a id="createBtn" class="mt-3 btn btn-outline-primary rounded-pill" style="display:none;">New+</a>
+@{
+    string displayStyle = "display:none !important;";
+    if (Model.SelectedYBSCompany > 0)
+    {
+        displayStyle = "";
+    }
+}
+<a id="createBtn" class="mt-3 btn btn-outline-primary rounded-pill" style="@displayStyle">New+</a>
 <div class="row"> 
     <div class="col-lg-8 col-md-8 col-sm-12 mt-1">
         <div class="table-responsive">
@@ -59,13 +66,7 @@
                             <td class="name">
                                 @Html.DisplayFor(modelItem => item.YBSTypeName)
                             </td>
-                            @{
-                                string displayStyle = "display:none !important;";
-                                if (Model.SelectedYBSCompany > 0) 
-                                {
-                                    displayStyle = "";
-                                }
-                            }
+                            
                             <td class="d-flex justify-content-center align-item-center actionBtn" style="@displayStyle">
                                 <a class="editBtn btn btn-outline me-3" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-duotone fa-pencil fa-lg" style="color:black;"></i></a>
                                 <a class="deleteBtn btn btn-outline" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-regular fa-trash fa-lg text-danger"></i></a>
@@ -83,12 +84,12 @@
                 var totalPageNo = Model.YBSTypeList.TotalPageNo;
                 var currentPageNo = Model.YBSTypeList.PageIndex;
 
-                string displayStyle = "display:none !important;";
+                string paginDisplayStyle = "display:none !important;";
                 if (Model.SelectedYBSCompany < 1)
                 {
-                    displayStyle = "";
+                    paginDisplayStyle = "";
                 }
-                <div id="pagin" style="@displayStyle">
+                <div id="pagin" style="@paginDisplayStyle">
                 <a asp-action="List"
                    asp-route-pageNo="@(Model.YBSTypeList.PageIndex - 1)"
                    class="link btn btn-primary btn-sm @prevDisabled">
