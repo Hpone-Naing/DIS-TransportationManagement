@@ -24,7 +24,7 @@
 
 <div class="row mt-3 search-container">
     <div class="col-lg-9 col-sm-12">
-        <form class="input-group" method="get" action="@Configuration.GetSection("AppUrls").GetSection("TestUrl").Value/VehicleData/List">
+        <form class="input-group" method="get" action="@Url.Action("List", "VehicleData")">
             <div class="col">
                 <input type="text" class="form-control" name="SearchString" placeholder="[Enter Keywords to Search]" style="border-top-left-radius:50px; border-bottom-left-radius:50px;">
             </div>
@@ -136,7 +136,8 @@
         var currentPageNo = Model.PageIndex;
         var searchString = ViewBag.SearchString ?? null;
         var cctvInstalled = ViewBag.CctvInstalled ?? null;
-        var cngQty = ViewBag.CngQty ?? null;
+        var posInstalled = ViewBag.POSInstalled ?? null;
+        var cngQty = ViewBag.CngQty ?? null; 
         var totalBusStop = ViewBag.TotalBusStop ?? null;
         var totalBusStopOption = ViewBag.TotalBusStopOption ?? null;
  
@@ -144,6 +145,7 @@
            asp-route-pageNo="@(Model.PageIndex - 1)"
            asp-route-SearchString="@searchString"
            asp-route-CctvInstalled="@cctvInstalled"
+           asp-route-POSInstalled="@posInstalled"
            asp-route-CngQty="@cngQty"
            asp-route-TotalBusStop="@totalBusStop"
            asp-route-TotalBusStopOption="@totalBusStopOption"
@@ -154,6 +156,7 @@
            asp-route-pageNo="@(Model.PageIndex + 1)"
            asp-route-SearchString="@searchString"
            asp-route-CctvInstalled="@cctvInstalled"
+           asp-route-POSInstalled="@posInstalled"
            asp-route-CngQty="@cngQty"
            asp-route-TotalBusStop="@totalBusStop"
            asp-route-TotalBusStopOption="@totalBusStopOption"
@@ -181,7 +184,7 @@ else
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="get" action="@Configuration.GetSection("AppUrls").GetSection("TestUrl").Value/VehicleData/List">
+                <form method="get" action="@Url.Action("List", "VehicleData")">
                     <div class="row">
                         <div class="col">
                                 <div class="form-group">
