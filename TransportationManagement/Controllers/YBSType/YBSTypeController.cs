@@ -20,19 +20,22 @@ namespace TransportationManagement.Controllers.YBSTypeController
 
         private YBSTypeView MakeYBSTypeView(int? pageNo, int ybsCompanyPkId)
         {
-            int pageSize = Utility.DEFAULT_PAGINATION_NUMBER;
             List<SelectListItem> LstYBSCompanie = _serviceFactory.CreateYBSCompanyService().GetSelectListYBSCompanys();
             List<YBSType> YBSTypeList;
+            PagingList<YBSType> paginYBSType;
+            int pageSize = Utility.DEFAULT_PAGINATION_NUMBER;
             if (ybsCompanyPkId > 0)
             {
                 YBSTypeList = _serviceFactory.CreateYBSTypeService().GetUniqueYBSTypesByYBSCompanyId(ybsCompanyPkId);
+                paginYBSType = PagingList<YBSType>.CreateAsync(YBSTypeList.AsQueryable<YBSType>(), pageNo ?? 1, 100);
+
             }
             else
             {
                 YBSTypeList = _serviceFactory.CreateYBSTypeService().GetUniqueYBSTypes();
                 ybsCompanyPkId = 0;
+                paginYBSType = PagingList<YBSType>.CreateAsync(YBSTypeList.AsQueryable<YBSType>(), pageNo ?? 1, pageSize);
             }
-            PagingList<YBSType> paginYBSType = PagingList<YBSType>.CreateAsync(YBSTypeList.AsQueryable<YBSType>(), pageNo ?? 1, pageSize);
             
             YBSTypeView viewModel = new YBSTypeView
             {
@@ -45,7 +48,6 @@ namespace TransportationManagement.Controllers.YBSTypeController
         }
         public IActionResult List(int? pageNo, int ybsCompanyPkId)
         {
-            Console.WriteLine("in list " + ybsCompanyPkId);
             if (!SessionUtil.IsActiveSession(HttpContext))
                 return RedirectToAction("Index", "Login");
             return View("CRUD", MakeYBSTypeView(pageNo, ybsCompanyPkId));
