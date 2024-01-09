@@ -59,15 +59,17 @@ namespace TransportationManagement.Services.Impl
             return query.Where(obj =>
                 (!string.IsNullOrEmpty(advanceSearch.POSInstalled) && EF.Property<string>(obj, "POSInstalled") != null && EF.Property<string>(obj, "POSInstalled").ToLower().Contains(advanceSearch.POSInstalled.ToLower()))
                 || (!string.IsNullOrEmpty(advanceSearch.CctvInstalled) && EF.Property<string>(obj, "CctvInstalled") != null && EF.Property<string>(obj, "CctvInstalled").ToLower().Contains(advanceSearch.CctvInstalled.ToLower()))
+                || (!string.IsNullOrEmpty(advanceSearch.TelematicDeviceInstalled) && EF.Property<string>(obj, "TelematicDeviceInstalled") != null && EF.Property<string>(obj, "TelematicDeviceInstalled").ToLower().Contains(advanceSearch.TelematicDeviceInstalled.ToLower()))
                 );
         }
-
-        private bool FilterAdvSearchOptions(Object obj, string colName, string advSearchString, string advSearchOption)
+        public bool FilterAdvSearchOptions(Object obj, string colName, string advSearchString, string advSearchOption)
         {
+            
             string columnValue = (string)EF.Property<string>(obj, colName);
             if (int.TryParse(columnValue, out int parseIntColumnValue))
             {
                 var parseIntAdvSeaerchString = int.Parse(advSearchString);
+
                 switch (advSearchOption)
                 {
                     case ">":
@@ -79,7 +81,7 @@ namespace TransportationManagement.Services.Impl
                     case "<=":
                         return parseIntColumnValue <= parseIntAdvSeaerchString;
                     default:
-                        return false;//throw new ArgumentException($"Invalid option: {option}");
+                        return parseIntColumnValue == parseIntAdvSeaerchString; ; //throw new ArgumentException($"Invalid option: {option}");
                 }
             }
             else

@@ -6,6 +6,7 @@ namespace TransportationManagement.Util
     public class Utility
     {
         public static int DEFAULT_PAGINATION_NUMBER = 5;
+
         public static void AlertMessage(Controller controller, string message, string color)
         {
             controller.TempData["Message"] = message;
@@ -14,16 +15,15 @@ namespace TransportationManagement.Util
 
         public static AdvanceSearch MakeAdvanceSearch(HttpContext context)
         {
-            string cngQty = context.Request.Query["CngQty"];
+            string posInstalled = context.Request.Query["POSInstalled"];
+            string telematicDeviceInstalled = context.Request.Query["TelematicDeviceInstalled"];
             string cctvInstalled = context.Request.Query["CctvInstalled"];
-            string totalBusStop = context.Request.Query["TotalBusStop"];
-            string totalBusStopOption = context.Request.Query["TotalBusStopOption"];
-
+           
             AdvanceSearch advanceSearch = new AdvanceSearch();
-            advanceSearch.CngQty = cngQty;
+            advanceSearch.POSInstalled = posInstalled;
             advanceSearch.CctvInstalled = cctvInstalled;
-            advanceSearch.TotalBusStop = totalBusStop;
-            advanceSearch.TotalBusStopOption = totalBusStopOption;
+            advanceSearch.TelematicDeviceInstalled = telematicDeviceInstalled;
+
             return advanceSearch;
         }
 

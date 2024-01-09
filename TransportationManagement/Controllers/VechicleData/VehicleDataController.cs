@@ -21,9 +21,7 @@ namespace TransportationManagement.Controllers.VechicleData
             ViewBag.SearchString = searchString;
             ViewBag.CctvInstalled = advanceSearch.CctvInstalled;
             ViewBag.POSInstalled = advanceSearch.POSInstalled;
-            ViewBag.CngQty = advanceSearch.CngQty;
-            ViewBag.TotalBusStop = advanceSearch.TotalBusStop;
-            ViewBag.TotalBusStopOption = advanceSearch.TotalBusStopOption;
+            ViewBag.TelematicDeviceInstalled = advanceSearch.TelematicDeviceInstalled;
         }
         public IActionResult List(int? pageNo)
         {

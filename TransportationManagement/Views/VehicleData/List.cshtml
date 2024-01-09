@@ -137,18 +137,16 @@
         var searchString = ViewBag.SearchString ?? null;
         var cctvInstalled = ViewBag.CctvInstalled ?? null;
         var posInstalled = ViewBag.POSInstalled ?? null;
-        var cngQty = ViewBag.CngQty ?? null; 
-        var totalBusStop = ViewBag.TotalBusStop ?? null;
-        var totalBusStopOption = ViewBag.TotalBusStopOption ?? null;
+        var telematicDeviceInstalled = ViewBag.TelematicDeviceInstalled ?? null;
+        var cngQty = ViewBag.CngQty ?? null;
+        var cngQtyOption = ViewBag.CngQtyOption ?? null;
  
     <a asp-action="List"
            asp-route-pageNo="@(Model.PageIndex - 1)"
            asp-route-SearchString="@searchString"
            asp-route-CctvInstalled="@cctvInstalled"
            asp-route-POSInstalled="@posInstalled"
-           asp-route-CngQty="@cngQty"
-           asp-route-TotalBusStop="@totalBusStop"
-           asp-route-TotalBusStopOption="@totalBusStopOption"
+           asp-route-TelematicDeviceInstalled="@telematicDeviceInstalled"
        class="link btn btn-primary btn-sm @prevDisabled">
         Previous
     </a>
@@ -157,9 +155,7 @@
            asp-route-SearchString="@searchString"
            asp-route-CctvInstalled="@cctvInstalled"
            asp-route-POSInstalled="@posInstalled"
-           asp-route-CngQty="@cngQty"
-           asp-route-TotalBusStop="@totalBusStop"
-           asp-route-TotalBusStopOption="@totalBusStopOption"
+           asp-route-TelematicDeviceInstalled="@telematicDeviceInstalled"
     class="link btn btn-primary btn-sm @nextDisabled">
         Next
     </a>
@@ -211,6 +207,21 @@ else
                             </select>
                         </div>
                     </div>
+
+                    <div class="row mt-3">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="TelematicDeviceInstalled" class="control-label">TelematicDeviceတပ်ဆင်ထားမှု</label>
+                            </div>
+                            <select name="TelematicDeviceInstalled" class="form-control">
+                                <option value="" selected>ရွေးချယ်ရန်</option>
+                                <option value="Yes">ရှိ</option>
+                                <option value="No">မရှိ</option>
+                                <option value="InProgress">ဆောင်ရွက်ဆဲ</option>
+                            </select>
+                        </div>
+                    </div>
+
                     
                     <button type="submit" class="btn btn-info mt-3 text-white" style="background-color: #3e81aa;">Search</button>
 
