@@ -1,6 +1,6 @@
 ﻿namespace TransportationManagement.Models
 {
-    [Table("TB_UserType")]
+    [Table("TB_UserTypes")]
     public class UserType
     {
         [Key]

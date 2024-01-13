@@ -2,7 +2,7 @@
 
 namespace TransportationManagement.Models
 {
-    [Table("TB_User")]
+    [Table("TB_Users")]
     public class User
     {
         [Key]
