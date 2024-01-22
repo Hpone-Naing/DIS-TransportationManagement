@@ -44,7 +44,6 @@ namespace TransportationManagement.Controllers.YBSCompanyController
         [ValidateAntiForgeryToken, HttpPost]
         public IActionResult Create(YBSCompany yBSCompany, int? pageNo)
         {
-            Console.WriteLine("Name: " + yBSCompany.YBSCompanyName);
             if (!SessionUtil.IsActiveSession(HttpContext))
                 return RedirectToAction("Index", "Login");
 

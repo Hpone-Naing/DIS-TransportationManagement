@@ -6,20 +6,24 @@ namespace TransportationManagement.Factories.Impl
 {
     public class ServiceFactoryImpl : ServiceFactory
     {
+        private readonly ILoggerFactory _loggerFactory;
+
         private readonly HumanResourceManagementDBContext _context;
         private readonly DriverService _driverService;
         private readonly YBSCompanyService _ybsCompanyService;
 
-        public ServiceFactoryImpl(HumanResourceManagementDBContext context, DriverService driverService, YBSCompanyService ybsCompanyService)
+        public ServiceFactoryImpl(HumanResourceManagementDBContext context, ILoggerFactory loggerFactory, DriverService driverService, YBSCompanyService ybsCompanyService)
         {
             _context = context;
+            _loggerFactory = loggerFactory;
             _driverService = driverService;
             _ybsCompanyService = ybsCompanyService;
         }
 
         public UserService CreateUserService()
         {
-            return new UserServiceImpl(_context);
+            ILogger<UserServiceImpl> userLogger = new Logger<UserServiceImpl>(_loggerFactory);
+            return new UserServiceImpl(_context, userLogger);
         }
         public EmployeeService CreateEmployeeService()
         {
@@ -28,32 +32,39 @@ namespace TransportationManagement.Factories.Impl
 
         public VehicleDataService CreateVehicleDataService()
         {
-            return new VehicleDataServiceImpl(_context);
+            ILogger<VehicleDataServiceImpl> vehicleDataLogger = new Logger<VehicleDataServiceImpl>(_loggerFactory);
+            return new VehicleDataServiceImpl(_context, vehicleDataLogger);
         }
         public FuelTypeService CreateFuelTypeService()
         {
-            return new FuelTypeServiceImpl(_context);
+            ILogger<FuelTypeServiceImpl> fuelTypeLogger = new Logger<FuelTypeServiceImpl>(_loggerFactory);
+            return new FuelTypeServiceImpl(_context, fuelTypeLogger);
         }
         public ManufacturerService CreateManufacturerService()
         {
-            return new ManufacturerServiceImpl(_context);
+            ILogger<ManufacturerServiceImpl> manufacturerLogger = new Logger<ManufacturerServiceImpl>(_loggerFactory);
+            return new ManufacturerServiceImpl(_context, manufacturerLogger);
         }
         public YBSCompanyService CreateYBSCompanyService()
         {
-            return new YBSCompanyServiceImpl(_context);
+            ILogger<YBSCompanyServiceImpl> ybsCompanyLogger = new Logger<YBSCompanyServiceImpl>(_loggerFactory);
+            return new YBSCompanyServiceImpl(_context, ybsCompanyLogger);
         }
         public YBSTypeService CreateYBSTypeService()
         {
-            return new YBSTypeServiceImpl(_context, _ybsCompanyService);
+            ILogger<YBSTypeServiceImpl> ybsTypeLogger = new Logger<YBSTypeServiceImpl>(_loggerFactory);
+            return new YBSTypeServiceImpl(_context, ybsTypeLogger, _ybsCompanyService);
         }
         public DriverService CreateDriverService()
         {
-            return new DriverServiceImpl(_context);
+            ILogger<DriverServiceImpl> driverLogger = new Logger<DriverServiceImpl>(_loggerFactory);
+            return new DriverServiceImpl(_context,driverLogger);
         }
 
         public YboRecordService CreateYBORecordService()
         {
-            return new YboServiceImpl(_context, _driverService);
+            ILogger<YboServiceImpl> yboServiceLogger = new Logger<YboServiceImpl>(_loggerFactory);
+            return new YboServiceImpl(_context, _driverService, yboServiceLogger);
         }
 
     }

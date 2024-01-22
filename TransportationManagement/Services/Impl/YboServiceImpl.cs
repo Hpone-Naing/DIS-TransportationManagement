@@ -9,9 +9,11 @@ namespace TransportationManagement.Services.Impl
 {
     public class YboServiceImpl : AbstractServiceImpl<YboRecord>, YboRecordService
     {
+        private readonly ILogger<YboServiceImpl> _logger;
         private readonly DriverService _driverService;
-        public YboServiceImpl(HumanResourceManagementDBContext context, DriverService driverService) : base(context)
+        public YboServiceImpl(HumanResourceManagementDBContext context, DriverService driverService, ILogger<YboServiceImpl> logger) : base(context, logger)
         {
+            _logger = logger;
             _driverService = driverService;
         }
 

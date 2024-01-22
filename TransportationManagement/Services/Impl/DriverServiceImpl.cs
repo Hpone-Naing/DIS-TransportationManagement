@@ -5,8 +5,11 @@ namespace TransportationManagement.Services.Impl
 {
     public class DriverServiceImpl : AbstractServiceImpl<Driver>, DriverService
     {
-        public DriverServiceImpl(HumanResourceManagementDBContext context) : base(context)
+        private readonly ILogger<DriverServiceImpl> _logger;
+
+        public DriverServiceImpl(HumanResourceManagementDBContext context, ILogger<DriverServiceImpl> logger) : base(context, logger)
         {
+            _logger = logger;
         }
 
         public Driver FindDriverByLicense(string licenseNumber)

@@ -7,75 +7,177 @@ namespace TransportationManagement.Services.Impl
 {
     public class YBSTypeServiceImpl : AbstractServiceImpl<YBSType>, YBSTypeService
     {
+        private readonly ILogger<YBSTypeServiceImpl> _logger;
+
         private readonly YBSCompanyService _ybsCompanyService;
-        public YBSTypeServiceImpl(HumanResourceManagementDBContext context, YBSCompanyService ybsCompanyService) : base(context)
+        public YBSTypeServiceImpl(HumanResourceManagementDBContext context, ILogger<YBSTypeServiceImpl> logger, YBSCompanyService ybsCompanyService) : base(context, logger)
         {
+            _logger = logger;
             _ybsCompanyService = ybsCompanyService;
         }
 
         public List<YBSType> GetAllYBSTypes()
         {
-            return GetAll().Where(ybsType => !ybsType.IsDeleted).ToList();
+            _logger.LogInformation(">>>>>>>>>> [YBSTypeServiceImpl][GetAllYBSTypes] Get YBSType list. <<<<<<<<<<");
+            try
+            {
+                _logger.LogInformation($">>>>>>>>>> Success. Get YBSType list. <<<<<<<<<<");
+                return GetAll().Where(ybsType => !ybsType.IsDeleted).ToList();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(">>>>>>>>>> Error occur when retrieving YBSType list. <<<<<<<<<<" + e);
+                throw;
+            }
         }
 
         public List<YBSType> GetUniqueYBSTypes()
         {
-            return GetUniqueList(ybsType => ybsType.YBSTypePkid).Where(ybsType => !ybsType.IsDeleted).ToList();
+            _logger.LogInformation(">>>>>>>>>> [YBSTypeServiceImpl][GetUniqueYBSTypes] Get unique YBSType list. <<<<<<<<<<");
+            try
+            {
+                _logger.LogInformation($">>>>>>>>>> Success. Get unique YBSType list. <<<<<<<<<<");
+                return GetUniqueList(ybsType => ybsType.YBSTypePkid).Where(ybsType => !ybsType.IsDeleted).ToList();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(">>>>>>>>>> Error occur when retrieveing unique YBSType list. <<<<<<<<<<" + e);
+                throw;
+            }
         }
 
         public List<YBSType> GetUniqueYBSTypesByYBSCompanyId(int ybsCompanyId = 1)
         {
-            return GetListByIntVal("YBSCompanyPkid", ybsCompanyId).Where(ybsType => !ybsType.IsDeleted).ToList();
+            _logger.LogInformation(">>>>>>>>>> [YBSTypeServiceImpl][GetUniqueYBSTypesByYBSCompanyId] Find YBSType by pkId. <<<<<<<<<<");
+            try
+            {
+                _logger.LogInformation($">>>>>>>>>> Success. Find YBSType by pkId. <<<<<<<<<<");
+                return GetListByIntVal("YBSCompanyPkid", ybsCompanyId).Where(ybsType => !ybsType.IsDeleted).ToList();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(">>>>>>>>>> Error occur when finding YBSType by pkId. <<<<<<<<<<" + e);
+                throw;
+            }
         }
 
         public PagingList<YBSType> GetAllYBSTypesWithPagin(int? pageNo, int PageSize)
         {
-            return GetAllWithPagin(GetAllYBSTypes(), pageNo, PageSize);
+            _logger.LogInformation(">>>>>>>>>> [YBSTypeServiceImpl][GetAllYBSTypesWithPagin] Get YBSType pagination list. <<<<<<<<<<");
+            try
+            {
+                _logger.LogInformation($">>>>>>>>>> Success. Get YBSType pagination list. <<<<<<<<<<");
+                return GetAllWithPagin(GetAllYBSTypes(), pageNo, PageSize);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(">>>>>>>>>> Error occur when retrieveing YBSType pagination list. <<<<<<<<<<" + e);
+                throw;
+            }
         }
 
         public List<SelectListItem> GetSelectListYBSTypesByYBSCompanyId(int ybsCompanyId = 1)
         {
-            List<SelectListItem> lstYBSTypes = GetUniqueYBSTypesByYBSCompanyId(ybsCompanyId)
+            _logger.LogInformation(">>>>>>>>>> [YBSTypeServiceImpl][GetSelectListYBSTypesByYBSCompanyId] Get SelectList YBSType selectbox's options and values. <<<<<<<<<<");
+            try
+            {
+                var lstYBSTypes = new List<SelectListItem>();
+                _logger.LogInformation($">>>>>>>>>> Make YBSType selectbox's options and values. <<<<<<<<<<");
+                try
+                {
+                    lstYBSTypes = GetUniqueYBSTypesByYBSCompanyId(ybsCompanyId)
                 .Select(
                     ybsType => new SelectListItem
                     {
                         Value = ybsType.YBSTypePkid.ToString(),
                         Text = ybsType.YBSTypeName
                     }).ToList();
+                }
+                catch (Exception e)
+                {
+                    _logger.LogInformation($">>>>>>>>>> Error occur. Make YBSType selectbox's options and values. <<<<<<<<<<");
+                    throw;
+                }
+                var defItem = new SelectListItem()
+                {
+                    Value = "",
+                    Text = "-----ရွေးချယ်ရန်-----"
+                };
 
-            var defItem = new SelectListItem()
+                lstYBSTypes.Insert(0, defItem);
+                return lstYBSTypes;
+            }
+            catch (Exception e)
             {
-                Value = "",
-                Text = "-----ရွေးချယ်ရန်-----"
-            };
-
-            lstYBSTypes.Insert(0, defItem);
-            return lstYBSTypes;
+                _logger.LogError(">>>>>>>>>> Error occur. Get SelectList YBSType selectbox's options and values. <<<<<<<<<<" + e);
+                throw;
+            }
         }
 
         public YBSType FindYBSTypeById(int id)
         {
-            return FindById(id);
+            _logger.LogInformation(">>>>>>>>>> [YBSTypeServiceImpl][FindYBSTypeById] Find YBSType by pkId. <<<<<<<<<<");
+            try
+            {
+                _logger.LogInformation($">>>>>>>>>> Success. Find YBSType by pkId. <<<<<<<<<<");
+                return FindById(id);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(">>>>>>>>>> Error occur when finding YBSType by pkId. <<<<<<<<<<" + e);
+                throw;
+            }
         }
 
         public bool CreateYBSType(int ybsCompanyPkId, YBSType yBSType)
         {
-            YBSCompany ybsCompany = _ybsCompanyService.FindYBSCompanyById(ybsCompanyPkId);
-            yBSType.YBSCompany = ybsCompany;
-            yBSType.IsDeleted = false;
-            return Create(yBSType);
+            _logger.LogInformation(">>>>>>>>>> [YBSTypeServiceImpl][CreateYBSType] Create YBSType. <<<<<<<<<<");
+            try
+            {
+                YBSCompany ybsCompany = _ybsCompanyService.FindYBSCompanyById(ybsCompanyPkId);
+                yBSType.YBSCompany = ybsCompany;
+                yBSType.IsDeleted = false;
+                _logger.LogInformation($">>>>>>>>>> Success. Create YBSType. <<<<<<<<<<");
+
+                return Create(yBSType);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(">>>>>>>>>> Error occur when creating YBSType. <<<<<<<<<<" + e);
+                throw;
+            }
         }
         public bool EditYBSType(int ybsCompanyPkId, YBSType yBSType)
         {
-            YBSCompany ybsCompany = _ybsCompanyService.FindYBSCompanyById(ybsCompanyPkId);
-            yBSType.YBSCompany = ybsCompany;
-            return Update(yBSType);
+            _logger.LogInformation(">>>>>>>>>> [YBSTypeServiceImpl][EditYBSType] Edit YBSType. <<<<<<<<<<");
+            try
+            {
+                _logger.LogInformation($">>>>>>>>>> Success. Edit YBSType. <<<<<<<<<<");
+                YBSCompany ybsCompany = _ybsCompanyService.FindYBSCompanyById(ybsCompanyPkId);
+                yBSType.YBSCompany = ybsCompany;
+                return Update(yBSType);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(">>>>>>>>>> Error occur when updating YBSType. <<<<<<<<<<" + e);
+                throw;
+            }
         }
 
         public bool DeleteYBSType(YBSType yBSType)
         {
-            yBSType.IsDeleted = true;
-            return Update(yBSType);
+            _logger.LogInformation(">>>>>>>>>> [YBSTypeServiceImpl][DeleteYBSType] Soft delete YBSType. <<<<<<<<<<");
+            try
+            {
+                yBSType.IsDeleted = true;
+                _logger.LogInformation($">>>>>>>>>> Success. Soft delete YBSType. <<<<<<<<<<");
+                return Update(yBSType);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(">>>>>>>>>> Error occur when soft deleting YBSType. <<<<<<<<<<" + e);
+                throw;
+            }
         }
     }
 }
