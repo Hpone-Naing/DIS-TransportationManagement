@@ -74,6 +74,21 @@ namespace TransportationManagement.Services.Impl
             }
         }
 
+        public Manufacturer FindManufacturerByName(string name)
+        {
+            _logger.LogInformation(">>>>>>>>>> [ManufacturerServiceImpl][FindManufacturerByName] Find Manufacturer by name. <<<<<<<<<<");
+            try
+            {
+                _logger.LogInformation($">>>>>>>>>> Success. Find Manufacturer by name. <<<<<<<<<<");
+                return FindByString("ManufacturerName", name);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(">>>>>>>>>> Error occur when finding Manufacturer by name. <<<<<<<<<<" + e);
+                throw;
+            }
+        }
+
         public bool CreateManufacturer(Manufacturer manufacturer)
         {
             _logger.LogInformation(">>>>>>>>>> [ManufacturerServiceImpl][CreateManufacturer] Create Manufacturer. <<<<<<<<<<");

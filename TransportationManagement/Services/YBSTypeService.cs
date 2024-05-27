@@ -11,6 +11,9 @@ namespace TransportationManagement.Services
         public PagingList<YBSType> GetAllYBSTypesWithPagin(int? pageNo, int PageSize);
         List<YBSType> GetAllYBSTypes();
         public YBSType FindYBSTypeById(int id);
+        public YBSType FindYBSTypeByName(string name);
+        public YBSType FindYBSTypeByNameAndCompany(string name, int companyPkId);
+        public bool CreateYBSType(YBSType yBSType);
         bool CreateYBSType(int ybsCompanyPkId, YBSType yBSType);
         public bool EditYBSType(int ybsCompanyPkId, YBSType yBSType);
         bool DeleteYBSType(YBSType yBSType);

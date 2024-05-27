@@ -73,6 +73,21 @@ namespace TransportationManagement.Services.Impl
             }
         }
 
+        public FuelType FindFuelTypeByName(string name)
+        {
+            _logger.LogInformation(">>>>>>>>>> [FuelTypeServiceImpl][FindFuelTypeByName] Get FuelType by name. <<<<<<<<<<");
+            try
+            {
+                _logger.LogInformation($">>>>>>>>>> Success. Get FuelType by name. <<<<<<<<<<");
+                return FindByString("FuelTypeName", name);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(">>>>>>>>>> Error occur when getting FuelType by name. <<<<<<<<<<" + e);
+                throw;
+            }
+        }
+
         public bool CreateFuelType(FuelType fuelType)
         {
             _logger.LogInformation(">>>>>>>>>> [FuelTypeServiceImpl][CreateFuelType] Create FuelType. <<<<<<<<<<");

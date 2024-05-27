@@ -1,4 +1,21 @@
-﻿function FillYBSTypesByYBSCompany(lstYBSCompanyCtrl, lstYBSTypeId) {
+﻿document.addEventListener('DOMContentLoaded', function () {
+    var fileInput = document.getElementById('fileInput');
+    var uploadBtn = document.getElementById('uploadBtn');
+
+    if (fileInput && uploadBtn) {
+        fileInput.addEventListener('change', function () {
+            if (this.files && this.files.length > 0) {
+                uploadBtn.style.display = 'inline-block';
+            } else {
+                uploadBtn.style.display = 'none';
+            }
+        });
+    } else {
+        console.error('fileInput or uploadBtn element not found.');
+    }
+});
+
+function FillYBSTypesByYBSCompany(lstYBSCompanyCtrl, lstYBSTypeId) {
 
     var lstYBSTypes = $("#" + lstYBSTypeId);
     lstYBSTypes.empty();
@@ -35,7 +52,9 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
+    console.log("dorument .ready")
     $('#createBtn').click(function () {
+        console.log("here create btn click")
         $('#edit').hide();
         $('#delete').hide();
         $('#create').show();
@@ -50,6 +69,8 @@ $(document).ready(function () {
 
 $(document).ready(function () {
     $(document).on('click', '.editBtn', function () {
+        console.log("here edit btn click");
+
         $('#create').hide();
         $('#delete').hide();
         $('#edit').show();
@@ -66,6 +87,8 @@ $(document).ready(function () {
 
 $(document).ready(function () {
     $(document).on('click', '.deleteBtn', function () {
+        console.log("here delete btn click");
+
         $('#create').hide();
         $('#edit').hide();
         $('#delete').show();

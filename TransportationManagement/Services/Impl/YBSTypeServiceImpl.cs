@@ -129,6 +129,36 @@ namespace TransportationManagement.Services.Impl
             }
         }
 
+        public YBSType FindYBSTypeByName(string name)
+        {
+            _logger.LogInformation(">>>>>>>>>> [YBSTypeServiceImpl][FindYBSTypeByName] Find YBSType by name. <<<<<<<<<<");
+            try
+            {
+                _logger.LogInformation($">>>>>>>>>> Success. Find YBSType by name. <<<<<<<<<<");
+                return FindByString("YBSTypeName", name) ;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(">>>>>>>>>> Error occur when finding YBSType by name. <<<<<<<<<<" + e);
+                throw;
+            }
+        }
+
+        public YBSType FindYBSTypeByNameAndCompany(string name, int companyPkId)
+        {
+            _logger.LogInformation(">>>>>>>>>> [YBSTypeServiceImpl][FindYBSTypeByNameAndCompany] Find YBSType by name and company. <<<<<<<<<<");
+            try
+            {
+                _logger.LogInformation($">>>>>>>>>> Success. Find YBSType by name and company. <<<<<<<<<<");
+                return _context.YBSTypes.FirstOrDefault(ybsType => ybsType.YBSCompanyPkid == companyPkId && ybsType.YBSTypeName == name);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(">>>>>>>>>> Error occur when finding YBSType by name and company. <<<<<<<<<<" + e);
+                throw;
+            }
+        }
+
         public bool CreateYBSType(int ybsCompanyPkId, YBSType yBSType)
         {
             _logger.LogInformation(">>>>>>>>>> [YBSTypeServiceImpl][CreateYBSType] Create YBSType. <<<<<<<<<<");
@@ -139,6 +169,22 @@ namespace TransportationManagement.Services.Impl
                 yBSType.IsDeleted = false;
                 _logger.LogInformation($">>>>>>>>>> Success. Create YBSType. <<<<<<<<<<");
 
+                return Create(yBSType);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(">>>>>>>>>> Error occur when creating YBSType. <<<<<<<<<<" + e);
+                throw;
+            }
+        }
+
+        public bool CreateYBSType(YBSType yBSType)
+        {
+            _logger.LogInformation(">>>>>>>>>> [YBSTypeServiceImpl][CreateYBSType] Create YBSType. <<<<<<<<<<");
+            try
+            {
+                yBSType.IsDeleted = false;
+                _logger.LogInformation($">>>>>>>>>> Success. Create YBSType. <<<<<<<<<<");
                 return Create(yBSType);
             }
             catch (Exception e)

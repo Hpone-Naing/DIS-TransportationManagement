@@ -9,6 +9,7 @@ namespace TransportationManagement.Services
         public List<T> GetUniqueList(Func<T, object> keySelector);
         public T FindById(int id);
         public T FindByString(string columnName, string str);
+        public T FindByIntVal(string columnName, int intVal);
         public List<T> GetListByIntVal(string columnName, int intVal);
         public bool Create(T entity);
         public bool Update(T t);

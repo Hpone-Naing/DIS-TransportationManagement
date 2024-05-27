@@ -113,6 +113,21 @@ namespace TransportationManagement.Services.Impl
             }
         }
 
+        public YBSCompany FindYBSCompanyByName(string name)
+        {
+            _logger.LogInformation(">>>>>>>>>> [YBSCompanyServiceImpl][FindYBSCompanyByName] Find YBSCompany by name. <<<<<<<<<<");
+            try
+            {
+                _logger.LogInformation($">>>>>>>>>> Success. Find YBSCompany by name. <<<<<<<<<<");
+                return FindByString("YBSCompanyName", name);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(">>>>>>>>>> Error occur when finding YBSCompany by name. <<<<<<<<<<" + e);
+                throw;
+            }
+        }
+
         public bool CreateYBSCompany(YBSCompany yBSCompany)
         {
             _logger.LogInformation(">>>>>>>>>> [YBSCompanyServiceImpl][CreateYBSCompany] Create YBSCompany. <<<<<<<<<<");

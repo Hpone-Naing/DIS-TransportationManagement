@@ -180,6 +180,22 @@ namespace TransportationManagement.Services.Impl
             }
         }
 
+        public T FindByIntVal(string columnName, int intVal)
+        {
+            _logger.LogInformation(">>>>>>>>>> [AbstractServiceImpl][FindByIntVal] Find object's specific columnName's value that match intValue <<<<<<<<<<");
+            try
+            {
+                _logger.LogInformation(">>>>>>>>>> Found object's specific columnName's value match intValue <<<<<<<<<<");
+                return _context.Set<T>().FirstOrDefault(entity =>
+                EF.Property<int>(entity, columnName) == intVal);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(">>>>>>>>>> Error occur when finding object's specific columnName's value match intValue. <<<<<<<<<<" + e);
+                throw;
+            }
+        }
+
         public List<T> GetListByIntVal(string columnName, int intVal)
         {
             _logger.LogInformation(">>>>>>>>>> [AbstractServiceImpl][GetListByIntVal] Get object list match specific columnName's value that match intValue <<<<<<<<<<");

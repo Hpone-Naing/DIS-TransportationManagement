@@ -8,17 +8,17 @@
     <img id="spinner" decoding="async" src="~/image/loading/spinner.gif" asp-append-version="true" />
 </div>
 
-<div class="d-flex justify-content-center align-item-center pb-4">
-    <label class="text-primary h4"> မော်တော်ယာဥ်အချက်အလက်စာရင်း</label>
+<div class="d-flex justify-content-center align-item-center pb-2">
+    <label class="text-primary h4" style="font-size: clamp(14px, 4vw, 20px);"> မော်တော်ယာဥ်</label>
 </div>
 @if (TempData.ContainsKey("Message") && TempData.ContainsKey("CssColor"))
 {
     <div class="alert @TempData["CssColor"]"> @TempData["Message"] </div>
 }
-<div style="background-color: #e1e135ed;" class="row mt-3 border border-dark">
+<div style="background-color: royalblue;" class="row border border-dark">
 
     <div class="d-flex justify-content-center align-item-center p-1">
-        <label class="text-black"> မော်တော်ယာဥ်အချက်အလက်များ </label>
+        <label class="text-white"> စာရင်း </label>
     </div>
 </div>
 
@@ -46,10 +46,38 @@
     </div>*@
 </div>
 
+<div class="row justify-content-between mt-2">
+        <div class="col-5">
+        <form method="get" action="@Url.Action("List", "VehicleData")">
+            <input type="hidden" name="export" value="excel">
+            <input type="hidden" name="SearchString" value="@ViewBag.SearchString">
+            <input type="hidden" name="CctvInstalled" value="@ViewBag.CctvInstalled">
+            <input type="hidden" name="POSInstalled" value="@ViewBag.POSInstalled">
+            <input type="hidden" name="TelematicDeviceInstalled" value="@ViewBag.TelematicDeviceInstalled">
+            <input type="hidden" name="pageNo" asp-for="@(Model.PageIndex)">
+            <div class="p-2 bd-highlight">
+                All
+                <input class="form-check-input" type="checkbox" value="true" name="ExportAll">
+                <button id="exportButton" type="submit" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="top" title="Export Excel File"><i class="far fa-file-excel fa-lg"></i></button>
+            </div>
+        </form>
+        </div>
+        <div class="col-7 mt-2">
+                <div class="col-md-12">
+                    <form class="d-flex" method="post" asp-controller="VehicleData" asp-action="ImportFromExcel"
+                  enctype="multipart/form-data" onsubmit="showSpinner()">
+                        <div asp-validation-summary="All" class="text-danger"></div>
+                            <input type="file" name="file" class="form-control" accept=".xlsx,.xls" id="fileInput" />
+                <button type="submit" id="uploadBtn" name="Upload" class="btn btn-primary" style="display: none;">Upload</button>
+                    </form>
+                </div>
+        </div>
+
+</div>
 
 <div class="table-responsive mt-2 rounded">
     <table class="table table-bordered  table-striped">
-        <thead style="background-color: #3e81aa;">
+        <thead style="background-color: royalblue;">
             <tr>
                 <th class="text-white">
                     စဥ်
@@ -175,8 +203,8 @@ else
 <div class="modal fade" id="advanceSearchModel" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content shadow rounded">
-            <div class="modal-header" style="background-color: #e1e135ed;">
-                <h5> Vehicle Advance Search </h5>
+            <div class="modal-header" style="background-color: royalblue;">
+                <h5 class="text-white"> Vehicle Advance Search </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -233,3 +261,8 @@ else
     </div>
 </div>
 <!--/ Advance Search Modal -->
+<script>
+    function showSpinner() {
+        document.getElementById('spinner-container').style.display = 'flex';
+    }
+</script>

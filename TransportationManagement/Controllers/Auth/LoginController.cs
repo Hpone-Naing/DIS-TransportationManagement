@@ -28,6 +28,7 @@ namespace TransportationManagement.Controllers.Auth
                 if (loginUser != null)
                 {
                     string hashedEnteredPassword = HashUtil.ComputeSHA256Hash(user.Password);
+                    Console.WriteLine("hashedPassword" + hashedEnteredPassword);
                     if (loginUser.IsAuthenticateUser(hashedEnteredPassword))
                     {
                         bool isRememberMe = Request.Form["RememberMe"] == "true";

@@ -78,7 +78,7 @@
         <header class="main-header">
             <!-- Logo -->
 
-            <a href="@Url.Action("List", "VehicleData")" class="logo" style="padding:0px;line-height:45px;">
+            <a href="@Url.Action("List", "VehicleData")" class="logo" style="padding:0px;line-height:45px;background-color: royalblue;">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
                 @*<span class="logo-mini"><b>INNO</b></span>*@
                 <!-- logo for regular state and mobile devices -->
@@ -91,8 +91,8 @@
 
             </a>
             <!-- Header Navbar: style can be found in header.less -->
-            <nav class="" style="height: 50px;background-color: #3e81aa;">
-                <div style="height: auto;background-color: #3e81aa;" class="d-flex justify-content-between p-1">
+            <nav class="" style="height: 50px;background-color: royalblue;">
+                <div style="height: auto;background-color: royalblue;" class="d-flex justify-content-between p-1">
                     <!-- Sidebar toggle button-->
                     <div>
                         <a b-zogy9lo6il="" href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
@@ -236,7 +236,7 @@
                         <li class="active menu-open">
                             <a href="#" class="active">
                                 <i class="fa fa-list"></i>
-                                <span style=" font-size: 16px;">YBSCompany Information</span>
+                                <span style=" font-size: 16px;">YBS Company Information</span>
 
                                 
                             </a>
@@ -250,7 +250,7 @@
                         <li class="active menu-open">
                             <a href="#" class="active">
                                 <i class="fa fa-list"></i>
-                                <span style=" font-size: 16px;">YBSType Information</span>
+                                <span style=" font-size: 16px;">YBS Number Information</span>
 
                                 
                             </a>
@@ -302,6 +302,9 @@
                                 </li>
                                 <li>
                                     <a class="link active" href="@Url.Action("Create", "VehicleData")" style="font-size: 14px;"><i class=""></i><span class="fa-solid fa-circle-plus"><label class="ms-2">စာရင်းသွင်းရန်</label></span></a>
+                                </li>
+                                <li>
+                                    <a class="link active" href="@Url.Action("DownloadExcelTemplate", "VehicleData")" style="font-size: 14px;"><i class=""></i><span class="fa-solid far fa-file-excel"><label class="ms-2">Excel Format ပုံစံဒေါင်းရန် </label></span></a>
                                 </li>
                             </ul>
                         </li>

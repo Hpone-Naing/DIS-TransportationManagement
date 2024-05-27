@@ -12,8 +12,8 @@ using TransportationManagement.Data;
 namespace HumanResourceManagement.Migrations
 {
     [DbContext(typeof(HumanResourceManagementDBContext))]
-    [Migration("20231226145834_AddVehicleNumberColumnInDriverTable")]
-    partial class AddVehicleNumberColumnInDriverTable
+    [Migration("20240519005128_Add2ColumnInVehicleData")]
+    partial class Add2ColumnInVehicleData
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,7 +24,7 @@ namespace HumanResourceManagement.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("HumanResourceManagement.Models.Department", b =>
+            modelBuilder.Entity("TransportationManagement.Models.Department", b =>
                 {
                     b.Property<int>("DepartmentPkid")
                         .ValueGeneratedOnAdd()
@@ -42,7 +42,7 @@ namespace HumanResourceManagement.Migrations
                     b.ToTable("TB_Department");
                 });
 
-            modelBuilder.Entity("HumanResourceManagement.Models.Driver", b =>
+            modelBuilder.Entity("TransportationManagement.Models.Driver", b =>
                 {
                     b.Property<int>("DriverPkid")
                         .ValueGeneratedOnAdd()
@@ -70,7 +70,7 @@ namespace HumanResourceManagement.Migrations
                     b.ToTable("TB_Driver");
                 });
 
-            modelBuilder.Entity("HumanResourceManagement.Models.FuelType", b =>
+            modelBuilder.Entity("TransportationManagement.Models.FuelType", b =>
                 {
                     b.Property<int>("FuelTypePkid")
                         .ValueGeneratedOnAdd()
@@ -83,12 +83,15 @@ namespace HumanResourceManagement.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.HasKey("FuelTypePkid");
 
                     b.ToTable("TB_FuelType");
                 });
 
-            modelBuilder.Entity("HumanResourceManagement.Models.Manufacturer", b =>
+            modelBuilder.Entity("TransportationManagement.Models.Manufacturer", b =>
                 {
                     b.Property<int>("ManufacturerPkid")
                         .ValueGeneratedOnAdd()
@@ -109,7 +112,7 @@ namespace HumanResourceManagement.Migrations
                     b.ToTable("TB_Manufacturer");
                 });
 
-            modelBuilder.Entity("HumanResourceManagement.Models.Position", b =>
+            modelBuilder.Entity("TransportationManagement.Models.Position", b =>
                 {
                     b.Property<int>("PositionPkid")
                         .ValueGeneratedOnAdd()
@@ -132,7 +135,7 @@ namespace HumanResourceManagement.Migrations
                     b.ToTable("TB_Position");
                 });
 
-            modelBuilder.Entity("HumanResourceManagement.Models.Staff", b =>
+            modelBuilder.Entity("TransportationManagement.Models.Staff", b =>
                 {
                     b.Property<int>("StaffPkid")
                         .ValueGeneratedOnAdd()
@@ -235,7 +238,7 @@ namespace HumanResourceManagement.Migrations
                     b.ToTable("TB_Staff");
                 });
 
-            modelBuilder.Entity("HumanResourceManagement.Models.User", b =>
+            modelBuilder.Entity("TransportationManagement.Models.User", b =>
                 {
                     b.Property<int>("UserPkid")
                         .ValueGeneratedOnAdd()
@@ -265,10 +268,10 @@ namespace HumanResourceManagement.Migrations
 
                     b.HasIndex("UserTypeID");
 
-                    b.ToTable("TB_User");
+                    b.ToTable("TB_Users");
                 });
 
-            modelBuilder.Entity("HumanResourceManagement.Models.UserType", b =>
+            modelBuilder.Entity("TransportationManagement.Models.UserType", b =>
                 {
                     b.Property<int>("UserTypeID")
                         .ValueGeneratedOnAdd()
@@ -283,10 +286,10 @@ namespace HumanResourceManagement.Migrations
 
                     b.HasKey("UserTypeID");
 
-                    b.ToTable("TB_UserType");
+                    b.ToTable("TB_UserTypes");
                 });
 
-            modelBuilder.Entity("HumanResourceManagement.Models.VehicleData", b =>
+            modelBuilder.Entity("TransportationManagement.Models.VehicleData", b =>
                 {
                     b.Property<int>("VehicleDataPkid")
                         .ValueGeneratedOnAdd()
@@ -295,17 +298,14 @@ namespace HumanResourceManagement.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VehicleDataPkid"), 1L, 1);
 
                     b.Property<string>("AssignedRoute")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("CctvInstalled")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("CngQty")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -318,16 +318,22 @@ namespace HumanResourceManagement.Migrations
                     b.Property<int>("FuelTypePkid")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsDeleted")
+                    b.Property<bool?>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("ManufacturedYear")
-                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("OperatorName")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("POSInstalled")
-                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("RegistrantOperatorName")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -335,30 +341,25 @@ namespace HumanResourceManagement.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Remarks")
-                        .IsRequired()
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("SerialNo")
-                        .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("TelematicDeviceInstalled")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("TotalBusStop")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int?>("VehicleManufacturer")
+                    b.Property<int>("VehicleManufacturer")
                         .HasColumnType("int");
 
                     b.Property<string>("VehicleNumber")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -369,7 +370,6 @@ namespace HumanResourceManagement.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("YBSName")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -386,7 +386,7 @@ namespace HumanResourceManagement.Migrations
                     b.ToTable("TB_VehicleData");
                 });
 
-            modelBuilder.Entity("HumanResourceManagement.Models.YboRecord", b =>
+            modelBuilder.Entity("TransportationManagement.Models.YboRecord", b =>
                 {
                     b.Property<int>("YboRecordPkid")
                         .ValueGeneratedOnAdd()
@@ -457,13 +457,16 @@ namespace HumanResourceManagement.Migrations
                     b.ToTable("TB_YboRecord");
                 });
 
-            modelBuilder.Entity("HumanResourceManagement.Models.YBSCompany", b =>
+            modelBuilder.Entity("TransportationManagement.Models.YBSCompany", b =>
                 {
                     b.Property<int>("YBSCompanyPkid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("YBSCompanyPkid"), 1L, 1);
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("YBSCompanyName")
                         .IsRequired()
@@ -475,13 +478,16 @@ namespace HumanResourceManagement.Migrations
                     b.ToTable("TB_YBSCompany");
                 });
 
-            modelBuilder.Entity("HumanResourceManagement.Models.YBSType", b =>
+            modelBuilder.Entity("TransportationManagement.Models.YBSType", b =>
                 {
                     b.Property<int>("YBSTypePkid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("YBSTypePkid"), 1L, 1);
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<int>("YBSCompanyPkid")
                         .HasColumnType("int");
@@ -498,9 +504,9 @@ namespace HumanResourceManagement.Migrations
                     b.ToTable("TB_YBSType");
                 });
 
-            modelBuilder.Entity("HumanResourceManagement.Models.Position", b =>
+            modelBuilder.Entity("TransportationManagement.Models.Position", b =>
                 {
-                    b.HasOne("HumanResourceManagement.Models.Department", "Department")
+                    b.HasOne("TransportationManagement.Models.Department", "Department")
                         .WithMany()
                         .HasForeignKey("DepartmentPkid")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -509,15 +515,15 @@ namespace HumanResourceManagement.Migrations
                     b.Navigation("Department");
                 });
 
-            modelBuilder.Entity("HumanResourceManagement.Models.Staff", b =>
+            modelBuilder.Entity("TransportationManagement.Models.Staff", b =>
                 {
-                    b.HasOne("HumanResourceManagement.Models.Department", "Department")
+                    b.HasOne("TransportationManagement.Models.Department", "Department")
                         .WithMany()
                         .HasForeignKey("DepartmentPkid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HumanResourceManagement.Models.Position", "Position")
+                    b.HasOne("TransportationManagement.Models.Position", "Position")
                         .WithMany()
                         .HasForeignKey("PositionPkid")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -528,9 +534,9 @@ namespace HumanResourceManagement.Migrations
                     b.Navigation("Position");
                 });
 
-            modelBuilder.Entity("HumanResourceManagement.Models.User", b =>
+            modelBuilder.Entity("TransportationManagement.Models.User", b =>
                 {
-                    b.HasOne("HumanResourceManagement.Models.UserType", "UserType")
+                    b.HasOne("TransportationManagement.Models.UserType", "UserType")
                         .WithMany()
                         .HasForeignKey("UserTypeID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -539,25 +545,27 @@ namespace HumanResourceManagement.Migrations
                     b.Navigation("UserType");
                 });
 
-            modelBuilder.Entity("HumanResourceManagement.Models.VehicleData", b =>
+            modelBuilder.Entity("TransportationManagement.Models.VehicleData", b =>
                 {
-                    b.HasOne("HumanResourceManagement.Models.FuelType", "FuelType")
+                    b.HasOne("TransportationManagement.Models.FuelType", "FuelType")
                         .WithMany()
                         .HasForeignKey("FuelTypePkid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HumanResourceManagement.Models.Manufacturer", "Manufacturer")
+                    b.HasOne("TransportationManagement.Models.Manufacturer", "Manufacturer")
                         .WithMany()
-                        .HasForeignKey("VehicleManufacturer");
+                        .HasForeignKey("VehicleManufacturer")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("HumanResourceManagement.Models.YBSType", "YBSType")
+                    b.HasOne("TransportationManagement.Models.YBSType", "YBSType")
                         .WithMany()
                         .HasForeignKey("VehicleTypePkid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HumanResourceManagement.Models.YBSCompany", "YBSCompany")
+                    b.HasOne("TransportationManagement.Models.YBSCompany", "YBSCompany")
                         .WithMany()
                         .HasForeignKey("YBSCompanyPkid")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -572,21 +580,21 @@ namespace HumanResourceManagement.Migrations
                     b.Navigation("YBSType");
                 });
 
-            modelBuilder.Entity("HumanResourceManagement.Models.YboRecord", b =>
+            modelBuilder.Entity("TransportationManagement.Models.YboRecord", b =>
                 {
-                    b.HasOne("HumanResourceManagement.Models.Driver", "Driver")
+                    b.HasOne("TransportationManagement.Models.Driver", "Driver")
                         .WithMany()
                         .HasForeignKey("DriverPkid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HumanResourceManagement.Models.YBSCompany", "YBSCompany")
+                    b.HasOne("TransportationManagement.Models.YBSCompany", "YBSCompany")
                         .WithMany()
                         .HasForeignKey("YBSCompanyPkid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HumanResourceManagement.Models.YBSType", "YBSType")
+                    b.HasOne("TransportationManagement.Models.YBSType", "YBSType")
                         .WithMany()
                         .HasForeignKey("YBSTypePkid")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -599,9 +607,9 @@ namespace HumanResourceManagement.Migrations
                     b.Navigation("YBSType");
                 });
 
-            modelBuilder.Entity("HumanResourceManagement.Models.YBSType", b =>
+            modelBuilder.Entity("TransportationManagement.Models.YBSType", b =>
                 {
-                    b.HasOne("HumanResourceManagement.Models.YBSCompany", "YBSCompany")
+                    b.HasOne("TransportationManagement.Models.YBSCompany", "YBSCompany")
                         .WithMany()
                         .HasForeignKey("YBSCompanyPkid")
                         .OnDelete(DeleteBehavior.Cascade)

@@ -3,6 +3,7 @@ using TransportationManagement.Data;
 using TransportationManagement.Paging;
 using Microsoft.EntityFrameworkCore;
 using TransportationManagement.Models;
+using System.Data;
 
 namespace TransportationManagement.Services.Impl
 {
@@ -30,6 +31,25 @@ namespace TransportationManagement.Services.Impl
             }
         }
 
+        public List<VehicleData> GetAllVehiclesEgerLoad()
+        {
+            _logger.LogInformation(">>>>>>>>>> [VehicleDataServiceImpl][GetAllVehicles] Get VehicleData list. <<<<<<<<<<");
+            try
+            {
+                _logger.LogInformation($">>>>>>>>>> Success. Get VehicleData list. <<<<<<<<<<");
+                return _context.VehicleDatas.Where(vehicleData => vehicleData.IsDeleted == false)
+                    .Include(ybsCompany => ybsCompany.YBSCompany)
+                    .Include(ybsType => ybsType.YBSType)
+                    .Include(fuelType => fuelType.FuelType)
+                    .Include(manufacturer => manufacturer.Manufacturer).ToList();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(">>>>>>>>>> Error occur when retrieving VehicleData list. <<<<<<<<<<" + e);
+                throw;
+            }
+        }
+
         public PagingList<VehicleData> GetAllVehiclesWithPagin(string searchString, AdvanceSearch advanceSearch, int? pageNo, int PageSize)
         {
             _logger.LogInformation(">>>>>>>>>> [VehicleDataServiceImpl][GetAllVehiclesWithPagin] SearchAll or AdvanceSearch or GetAll VehicleData paginate eger load list. <<<<<<<<<<");
@@ -43,7 +63,12 @@ namespace TransportationManagement.Services.Impl
                     try
                     {
                         _logger.LogInformation($">>>>>>>>>> Success. Get searchAll result VehicleData paginate eger load list. <<<<<<<<<<");
-                        resultList = vehicleDatas.Where(vehicle => IsSearchDataContained(vehicle, searchString))
+                        resultList = GetAllVehiclesEgerLoad()
+                            .Where(vehicle => IsSearchDataContained(vehicle, searchString))
+                            .Where(vehicle => IsSearchDataContained(vehicle.YBSCompany, searchString))
+                            .Where(vehicle => IsSearchDataContained(vehicle.YBSType, searchString))
+                            .Where(vehicle => IsSearchDataContained(vehicle.FuelType, searchString))
+                            .Where(vehicle => IsSearchDataContained(vehicle.Manufacturer, searchString))
                             .AsQueryable()
                             .ToList();
                     }
@@ -59,7 +84,74 @@ namespace TransportationManagement.Services.Impl
                     try
                     {
                         _logger.LogInformation($">>>>>>>>>> Success. Get AdvanceSearch result VehicleData paginate eger load list. <<<<<<<<<<");
-                        resultList = AdvanceSearch(advanceSearch, _context.VehicleDatas).Where(vehicleData => !vehicleData.IsDeleted).ToList();
+                        resultList = AdvanceSearch(advanceSearch, _context.VehicleDatas).Where(vehicleData => vehicleData.IsDeleted == false).ToList();
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogError(">>>>>>>>>> Error occur. Get AdvanceSearch result VehicleData paginate eger load list. <<<<<<<<<<" + e);
+                        throw;
+                    }
+                }
+                else
+                {
+                    _logger.LogInformation($">>>>>>>>>> GetAll VehicleData paginate eger load list. <<<<<<<<<<");
+                    try
+                    {
+                        _logger.LogInformation($">>>>>>>>>> Success. GetAll VehicleData paginate eger load list. <<<<<<<<<<");
+                        resultList = vehicleDatas;
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogError(">>>>>>>>>> Error occur. GetAll VehicleData paginate eger load list. <<<<<<<<<<" + e);
+                        throw;
+                    }
+                }
+                _logger.LogInformation($">>>>>>>>>> Success. SearchAll or GetAll SpecialEventInvestigationDept paginate eger load list. <<<<<<<<<<");
+                return GetAllWithPagin(resultList, pageNo, PageSize);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(">>>>>>>>>> Error occur. SearchAll or AdvanceSearch or GetAll VehicleData paginate eger load list. <<<<<<<<<<" + e);
+                throw;
+            }
+        }
+
+        public PagingList<VehicleData> GetAllVehiclesWithPaginForExcelExport(string searchString, AdvanceSearch advanceSearch, int? pageNo, int PageSize)
+        {
+            _logger.LogInformation(">>>>>>>>>> [VehicleDataServiceImpl][GetAllVehiclesWithPagin] SearchAll or AdvanceSearch or GetAll VehicleData paginate eger load list. <<<<<<<<<<");
+            try
+            {
+                List<VehicleData> vehicleDatas = GetAllVehiclesEgerLoad();
+                List<VehicleData> resultList = new List<VehicleData>();
+                if (searchString != null && !String.IsNullOrEmpty(searchString))
+                {
+                    _logger.LogInformation($">>>>>>>>>> Get searchAll result VehicleData paginate eger load list. <<<<<<<<<<");
+                    try
+                    {
+                        _logger.LogInformation($">>>>>>>>>> Success. Get searchAll result VehicleData paginate eger load list. <<<<<<<<<<");
+                        resultList = GetAllVehiclesEgerLoad()
+                            .Where(vehicle => IsSearchDataContained(vehicle, searchString))
+                            .Where(vehicle => IsSearchDataContained(vehicle.YBSCompany, searchString))
+                            .Where(vehicle => IsSearchDataContained(vehicle.YBSType, searchString))
+                            .Where(vehicle => IsSearchDataContained(vehicle.FuelType, searchString))
+                            .Where(vehicle => IsSearchDataContained(vehicle.Manufacturer, searchString))
+                            .AsQueryable()
+                            .ToList();
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogError(">>>>>>>>>> Error occur. Get searchAll result VehicleData paginate eger load list. <<<<<<<<<<" + e);
+                        throw;
+                    }
+                }
+                else if (!string.IsNullOrEmpty(advanceSearch.POSInstalled) || !string.IsNullOrEmpty(advanceSearch.TelematicDeviceInstalled) || !string.IsNullOrEmpty(advanceSearch.CctvInstalled))
+                {
+                    Console.WriteLine("Here adv search not null");
+                    _logger.LogInformation($">>>>>>>>>> Get AdvanceSearch result VehicleData paginate eger load list. <<<<<<<<<<");
+                    try
+                    {
+                        _logger.LogInformation($">>>>>>>>>> Success. Get AdvanceSearch result VehicleData paginate eger load list. <<<<<<<<<<");
+                        resultList = AdvanceSearch(advanceSearch, _context.VehicleDatas).Where(vehicleData => vehicleData.IsDeleted == false).ToList();
                     }
                     catch (Exception e)
                     {
@@ -140,6 +232,31 @@ namespace TransportationManagement.Services.Impl
             }
         }
 
+        public bool HardDeleteVehicle(VehicleData vehicleData)
+        {
+            _logger.LogInformation(">>>>>>>>>> [VehicleDataServiceImpl][DeleteVehicle] Hard delete VehicleData. <<<<<<<<<<");
+            try
+            {
+                var entity = _context.VehicleDatas.Find(vehicleData.VehicleDataPkid);
+                if (entity == null)
+                {
+                    _logger.LogWarning(">>>>>>>>>> VehicleData not found. <<<<<<<<<<");
+                    return false;
+                }
+
+                _context.VehicleDatas.Remove(entity);
+                _context.SaveChanges();
+                _logger.LogInformation($">>>>>>>>>> Success. Hard deleted VehicleData with ID {vehicleData.VehicleDataPkid}. <<<<<<<<<<");
+                return true;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(">>>>>>>>>> Error occurred when hard deleting VehicleData. <<<<<<<<<<" + e);
+                return false;
+            }
+        }
+
+
         public VehicleData FindVehicleDataById(int id)
         {
             _logger.LogInformation(">>>>>>>>>> [VehicleDataServiceImpl][FindVehicleDataById] Find VehicleData by pkId. <<<<<<<<<<");
@@ -151,6 +268,21 @@ namespace TransportationManagement.Services.Impl
             catch (Exception e)
             {
                 _logger.LogError(">>>>>>>>>> Error occur when finding VehicleData by pkId. <<<<<<<<<<" + e);
+                throw;
+            }
+        }
+
+        public VehicleData FindVehicleDataByVehicleNumber(string vehicleNumber)
+        {
+            _logger.LogInformation(">>>>>>>>>> [VehicleDataServiceImpl][FindVehicleDataByVehicleNumber] Find VehicleData by vehicleNumber. <<<<<<<<<<");
+            try
+            {
+                _logger.LogInformation(">>>>>>>>>> Success. Find VehicleData by vehicleNumber. <<<<<<<<<<");
+                return FindByString("VehicleNumber", vehicleNumber);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(">>>>>>>>>> Error occur when finding VehicleData by vehicleNumber. <<<<<<<<<<" + e);
                 throw;
             }
         }
@@ -171,6 +303,77 @@ namespace TransportationManagement.Services.Impl
             catch (Exception e)
             {
                 _logger.LogError(">>>>>>>>>> Error occur when finding VehicleData by pkId with eger load. <<<<<<<<<<" + e);
+                throw;
+            }
+        }
+
+        public DataTable MakeVehicleDataExcelData(PagingList<VehicleData> vehicleDatas, bool exportAll)
+        {
+            _logger.LogInformation(">>>>>>>>>> [VehicleDataServiceImpl][MakeVehicleDataExcelData] Assign SearchAll or GetAll VehicleData list to dataTable. <<<<<<<<<<");
+            DataTable dt = new DataTable("Call Center တိုင်ကြားမှုစာရင်း");
+            dt.Columns.AddRange(new DataColumn[14] {
+                                        new DataColumn("စဥ်"),
+                                        new DataColumn("ကုမ္ပဏီအမည်"),
+                                        new DataColumn("ယာဥ်အမှတ်"),
+                                        new DataColumn("YBSယာဥ်လိုင်း"),
+                                        new DataColumn("ယာဥ်အမျိုးအမည်"),
+                                        new DataColumn("ယာဥ်အမျိုးအစား"),
+                                        new DataColumn("ထုတ်လုပ်သည့်ခုနှစ်"),
+                                        new DataColumn("စက်သုံးဆီအမျိုးအစား(EV/CNG/Diesel)"),
+                                        new DataColumn("CNGအိုးသက်တမ်း"),
+                                        new DataColumn("Operatorအမည်"),
+                                        new DataColumn("ကမ-၃အမည်ပေါက်"),
+                                        new DataColumn("Telematics"),
+                                        new DataColumn("CCTV"),
+                                        new DataColumn("YPS(POS)"),
+                                        });
+            var list = new List<VehicleData>();
+            if (exportAll)
+            {
+                _logger.LogInformation(">>>>>>>>>> For export all datas. <<<<<<<<<<");
+                _logger.LogInformation(">>>>>>>>>> Get all VehicleData eger load list. <<<<<<<<<<");
+                try
+                {
+                    _logger.LogInformation(">>>>>>>>>> ှSuccess. Get all VehicleData eger load list. <<<<<<<<<<");
+                    list = GetAllVehiclesEgerLoad();
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(">>>>>>>>>> Error occur when getting all VehicleData eger load list. <<<<<<<<<<" + e);
+                    throw;
+                }
+            }
+            else
+            {
+                _logger.LogInformation(">>>>>>>>>> For export paginate or searchResult VehicleData list. <<<<<<<<<<");
+                _logger.LogInformation(">>>>>>>>>> Get all paginate or searchResult VehicleData eger load list. <<<<<<<<<<");
+                try
+                {
+                    _logger.LogInformation(">>>>>>>>>> Success. Get all paginate or searchResult VehicleData eger load list. <<<<<<<<<<");
+                    list = vehicleDatas;
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(">>>>>>>>>> Error occur when getting all paginate or searchResult VehicleData eger load list. <<<<<<<<<<" + e);
+                    throw;
+                }
+            }
+            try
+            {
+                _logger.LogInformation(">>>>>>>>>> Assign list to dataTable. <<<<<<<<<<");
+                if (list.Count() > 0)
+                {
+                    foreach (var vehicleData in list)
+                    {
+                        dt.Rows.Add(vehicleData.SerialNo, vehicleData.YBSCompany.YBSCompanyName, vehicleData.VehicleNumber, vehicleData.YBSType.YBSTypeName, vehicleData.YBSName, vehicleData.Manufacturer.ManufacturerName, vehicleData.ManufacturedYear, vehicleData.FuelType.FuelTypeName, vehicleData.CngQty, vehicleData.OperatorName, vehicleData.RegistrantOperatorName, (vehicleData.TelematicDeviceInstalled != "yes" && vehicleData.TelematicDeviceInstalled != "no") ? vehicleData.TelematicDeviceInstalled : vehicleData.TelematicDeviceInstalled == "yes" ? "ü" : "û", (vehicleData.CctvInstalled != "yes" && vehicleData.CctvInstalled != "no") ? vehicleData.CctvInstalled : vehicleData.CctvInstalled == "yes" ? "ü" : "û", (vehicleData.POSInstalled != "yes" && vehicleData.POSInstalled != "no") ? vehicleData.POSInstalled : vehicleData.POSInstalled == "yes" ? "ü" : "û");
+                    }
+                }
+                _logger.LogInformation(">>>>>>>>>> Assign list to dataTable success. <<<<<<<<<<");
+                return dt;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(">>>>>>>>>> Error occur when assigning SearchAll or GetAll VehicleData list to dataTable. <<<<<<<<<<" + e);
                 throw;
             }
         }
