@@ -58,6 +58,7 @@ namespace TransportationManagement.Controllers.VechicleData
                 PagingList<VehicleData> vehicleDatas = _serviceFactory.CreateVehicleDataService().GetAllVehiclesWithPagin(searchString, advanceSearch, pageNo, pageSize);
                 if (Request.Query["export"] == "excel")
                 {
+                    Console.WriteLine("here export excel..........");
                     bool ExportAll = Request.Query["ExportAll"] == "true";
                     using (XLWorkbook wb = new XLWorkbook())
                     {

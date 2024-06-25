@@ -67,8 +67,10 @@ namespace TransportationManagement.Services.Impl
 
                             if (propValue != null)
                             {
-                                if (propValue.IndexOf(searchData, StringComparison.OrdinalIgnoreCase) >= 0)
+
+                                if (propValue.Trim().IndexOf(searchData, StringComparison.OrdinalIgnoreCase) >= 0)
                                 {
+
                                     _logger.LogInformation(">>>>>>>>>> Match searchString and colVal <<<<<<<<<<");
                                     return true;
                                 }

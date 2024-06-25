@@ -50,27 +50,149 @@ namespace TransportationManagement.Services.Impl
             }
         }
 
-        public PagingList<VehicleData> GetAllVehiclesWithPagin(string searchString, AdvanceSearch advanceSearch, int? pageNo, int PageSize)
+        private List<VehicleData> GetAllVehicleWithLazyLoad()
+        {
+            _logger.LogInformation(">>>>>>>>>> [VehicleDataServiceImpl][GetAllVehicleWithLazyLoad] Get VehicleData list. <<<<<<<<<<");
+            try
+            {
+                _logger.LogInformation($">>>>>>>>>> Success. Get VehicleData list. <<<<<<<<<<");
+                return _context.VehicleDatas.Where(vehicleData => vehicleData.IsDeleted == false).ToList();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(">>>>>>>>>> Error occur when retrieving VehicleData list. <<<<<<<<<<" + e);
+                throw;
+            }
+        } 
+
+        private List<VehicleData> GetAllVehicleWithYBSCompany()
+        {
+            _logger.LogInformation(">>>>>>>>>> [VehicleDataServiceImpl][GetAllVehicleWithYBSCompany] Get VehicleData list. <<<<<<<<<<");
+            try
+            {
+                _logger.LogInformation($">>>>>>>>>> Success. Get VehicleData list. <<<<<<<<<<");
+                return _context.VehicleDatas.Where(vehicleData => vehicleData.IsDeleted == false)
+                    .Include(ybsCompany => ybsCompany.YBSCompany).ToList();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(">>>>>>>>>> Error occur when retrieving VehicleData list. <<<<<<<<<<" + e);
+                throw;
+            }
+        }
+
+        private List<VehicleData> GetAllVehicleWithYBSType()
+        {
+            _logger.LogInformation(">>>>>>>>>> [VehicleDataServiceImpl][GetAllVehicleWithYBSType] Get VehicleData list. <<<<<<<<<<");
+            try
+            {
+                _logger.LogInformation($">>>>>>>>>> Success. Get VehicleData list. <<<<<<<<<<");
+                return _context.VehicleDatas.Where(vehicleData => vehicleData.IsDeleted == false)
+                    .Include(ybsType => ybsType.YBSType).ToList();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(">>>>>>>>>> Error occur when retrieving VehicleData list. <<<<<<<<<<" + e);
+                throw;
+            }
+        }
+
+        private List<VehicleData> GetAllVehicleWithManufacturer()
+        {
+            _logger.LogInformation(">>>>>>>>>> [VehicleDataServiceImpl][GetAllVehicleWithManufacturer] Get VehicleData list. <<<<<<<<<<");
+            try
+            {
+                _logger.LogInformation($">>>>>>>>>> Success. Get VehicleData list. <<<<<<<<<<");
+                return _context.VehicleDatas.Where(vehicleData => vehicleData.IsDeleted == false)
+                    .Include(manufacturer => manufacturer.Manufacturer).ToList();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(">>>>>>>>>> Error occur when retrieving VehicleData list. <<<<<<<<<<" + e);
+                throw;
+            }
+        }
+
+        private List<VehicleData> GetAllVehicleWithFuelType()
+        {
+            _logger.LogInformation(">>>>>>>>>> [VehicleDataServiceImpl][GetAllVehicleWithFuelType] Get VehicleData list. <<<<<<<<<<");
+            try
+            {
+                _logger.LogInformation($">>>>>>>>>> Success. Get VehicleData list. <<<<<<<<<<");
+                return _context.VehicleDatas.Where(vehicleData => vehicleData.IsDeleted == false)
+                    .Include(fuelType => fuelType.FuelType).ToList();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(">>>>>>>>>> Error occur when retrieving VehicleData list. <<<<<<<<<<" + e);
+                throw;
+            }
+        }
+
+        private List<VehicleData> searchResultList(string searchString)
+        {
+            List<VehicleData> resultList = GetAllVehicleWithLazyLoad().Where(vehicle => IsSearchDataContained(vehicle, searchString)).AsQueryable().ToList();
+            if (resultList.Count < 1)
+            {
+                resultList = GetAllVehicleWithYBSCompany().Where(vehicle => IsSearchDataContained(vehicle.YBSCompany, searchString)).AsQueryable().ToList();
+            }
+            if (resultList.Count < 1)
+            {
+                resultList = GetAllVehicleWithYBSType().Where(vehicle => IsSearchDataContained(vehicle.YBSType, searchString)).AsQueryable().ToList();
+            }
+            if (resultList.Count < 1)
+            {
+                resultList = GetAllVehicleWithFuelType().Where(vehicle => IsSearchDataContained(vehicle.FuelType, searchString)).AsQueryable().ToList();
+            }
+            if (resultList.Count < 1)
+            {
+                resultList = GetAllVehicleWithManufacturer().Where(vehicle => IsSearchDataContained(vehicle.Manufacturer, searchString)).AsQueryable().ToList();
+            }
+            return resultList;
+        }
+
+        public PagingList<VehicleData> GetAllVehiclesWithPagin(string searchWord, AdvanceSearch advanceSearch, int? pageNo, int PageSize)
         {
             _logger.LogInformation(">>>>>>>>>> [VehicleDataServiceImpl][GetAllVehiclesWithPagin] SearchAll or AdvanceSearch or GetAll VehicleData paginate eger load list. <<<<<<<<<<");
             try
             {
                 List<VehicleData> vehicleDatas = GetAllVehicles();
                 List<VehicleData> resultList = new List<VehicleData>();
-                if (searchString != null && !String.IsNullOrEmpty(searchString))
+                if (searchWord != null && !String.IsNullOrEmpty(searchWord))
                 {
+                    string searchString = searchWord.Trim();
+
                     _logger.LogInformation($">>>>>>>>>> Get searchAll result VehicleData paginate eger load list. <<<<<<<<<<");
                     try
                     {
+                        Console.WriteLine("search string......................." + searchString);
                         _logger.LogInformation($">>>>>>>>>> Success. Get searchAll result VehicleData paginate eger load list. <<<<<<<<<<");
-                        resultList = GetAllVehiclesEgerLoad()
-                            .Where(vehicle => IsSearchDataContained(vehicle, searchString))
+                        /*resultList = GetAllVehiclesEgerLoad()
+                            .Where(vehicle => IsSearchDataContained(vehicle, searchString) || IsSearchDataContained(vehicle.YBSCompany, searchString) || IsSearchDataContained(vehicle.YBSType, searchString) || IsSearchDataContained(vehicle.FuelType, searchString) || IsSearchDataContained(vehicle.Manufacturer, searchString))
                             .Where(vehicle => IsSearchDataContained(vehicle.YBSCompany, searchString))
                             .Where(vehicle => IsSearchDataContained(vehicle.YBSType, searchString))
                             .Where(vehicle => IsSearchDataContained(vehicle.FuelType, searchString))
                             .Where(vehicle => IsSearchDataContained(vehicle.Manufacturer, searchString))
                             .AsQueryable()
                             .ToList();
+                        resultList = GetAllVehicleWithLazyLoad().Where(vehicle => IsSearchDataContained(vehicle, searchString)).AsQueryable().ToList();
+                        if(resultList.Count < 1)
+                        {
+                            resultList = GetAllVehicleWithYBSCompany().Where(vehicle => IsSearchDataContained(vehicle.YBSCompany, searchString)).AsQueryable().ToList();
+                        }
+                        if(resultList.Count < 1)
+                        {
+                            resultList = GetAllVehicleWithYBSType().Where(vehicle => IsSearchDataContained(vehicle.YBSType, searchString)).AsQueryable().ToList();
+                        }
+                        if(resultList.Count < 1)
+                        {
+                            resultList = GetAllVehicleWithFuelType().Where(vehicle => IsSearchDataContained(vehicle.FuelType, searchString)).AsQueryable().ToList();
+                        }
+                        if(resultList.Count < 1)
+                        {
+                            resultList = GetAllVehicleWithManufacturer().Where(vehicle => IsSearchDataContained(vehicle.Manufacturer, searchString)).AsQueryable().ToList();
+                        }*/
+                        resultList = searchResultList(searchString);
                     }
                     catch (Exception e)
                     {
@@ -129,14 +251,16 @@ namespace TransportationManagement.Services.Impl
                     try
                     {
                         _logger.LogInformation($">>>>>>>>>> Success. Get searchAll result VehicleData paginate eger load list. <<<<<<<<<<");
-                        resultList = GetAllVehiclesEgerLoad()
+                        /*resultList = GetAllVehiclesEgerLoad()
                             .Where(vehicle => IsSearchDataContained(vehicle, searchString))
                             .Where(vehicle => IsSearchDataContained(vehicle.YBSCompany, searchString))
                             .Where(vehicle => IsSearchDataContained(vehicle.YBSType, searchString))
                             .Where(vehicle => IsSearchDataContained(vehicle.FuelType, searchString))
                             .Where(vehicle => IsSearchDataContained(vehicle.Manufacturer, searchString))
                             .AsQueryable()
-                            .ToList();
+                            .ToList();*/
+                        Console.WriteLine(" excel searchString......." + searchString);
+                        resultList = searchResultList(searchString);
                     }
                     catch (Exception e)
                     {
@@ -207,6 +331,9 @@ namespace TransportationManagement.Services.Impl
             try
             {
                 _logger.LogInformation($">>>>>>>>>> Success. Edit VehicleData. <<<<<<<<<<");
+                vehicleData.IsDeleted = false;
+                vehicleData.CreatedDate = DateTime.Now;
+                vehicleData.RegistrationDate = DateTime.Now;
                 return Update(vehicleData);
             }
             catch (Exception e)
