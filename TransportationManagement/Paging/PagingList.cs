@@ -4,11 +4,16 @@
     {
         public int PageIndex { get;  set; }
         public int TotalPages { get; private set; }
+        public int CurrentSet { get; set; }
+
+        public int PageSize { get; set; }
 
         public PagingList(List<T> items, int count, int pageIndex, int pageSize)
         {
             PageIndex = pageIndex;
             TotalPages = (int)Math.Ceiling(count / (double)pageSize);
+            PageSize = pageSize;
+            CurrentSet  = (int)Math.Ceiling((decimal)pageIndex / pageSize);
 
             this.AddRange(items);
         }

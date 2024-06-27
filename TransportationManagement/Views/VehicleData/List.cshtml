@@ -158,7 +158,82 @@
     <br />
 @if (Model != null && Model.Any())
 {
-        var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+
+        var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+        var totalPageNo = Model.TotalPageNo;
+        var currentPageNo = Model.PageIndex;
+        var searchString = ViewBag.SearchString ?? null;
+        var cctvInstalled = ViewBag.CctvInstalled ?? null;
+        var posInstalled = ViewBag.POSInstalled ?? null;
+        var telematicDeviceInstalled = ViewBag.TelematicDeviceInstalled ?? null;
+        var cngQty = ViewBag.CngQty ?? null;
+        var cngQtyOption = ViewBag.CngQtyOption ?? null;
+
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <li class="page-item @(Model.PageIndex == 1 ? "disabled" : "")">
+                    <a class="page-link" asp-action="List"
+                       asp-route-pageNo="1"
+                       asp-route-SearchString="@searchString"
+                       asp-route-CctvInstalled="@cctvInstalled"
+                       asp-route-POSInstalled="@posInstalled"
+                       asp-route-TelematicDeviceInstalled="@telematicDeviceInstalled">&laquo;&laquo;</a>
+                </li>
+                <li class="page-item @(Model.PageIndex == 1 ? "disabled" : "")">
+                    <a class="page-link" asp-action="List"
+                       asp-route-pageNo="@(Model.PageIndex - 1)"
+                       asp-route-SearchString="@searchString"
+                       asp-route-CctvInstalled="@cctvInstalled"
+                       asp-route-POSInstalled="@posInstalled"
+                       asp-route-TelematicDeviceInstalled="@telematicDeviceInstalled">Previous</a>
+                </li>
+
+                @for (int i = (Model.CurrentSet - 1) * Model.PageSize + 1;
+               i <= Math.Min(Model.CurrentSet * Model.PageSize, Model.TotalPages);
+               i++)
+                {
+                    <li class="page-item @(Model.PageIndex == i ? "active" : "")">
+                        <a class="page-link" asp-action="List"
+                           asp-route-pageNo="@i"
+                           asp-route-SearchString="@searchString"
+                           asp-route-CctvInstalled="@cctvInstalled"
+                           asp-route-POSInstalled="@posInstalled"
+                           asp-route-TelematicDeviceInstalled="@telematicDeviceInstalled">@i</a>
+                    </li>
+                }
+
+                @if (Model.CurrentSet * Model.PageSize < Model.TotalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-action="List"
+                           asp-route-pageNo="@(Model.CurrentSet * Model.PageSize + 1)"
+                           asp-route-SearchString="@searchString"
+                           asp-route-CctvInstalled="@cctvInstalled"
+                           asp-route-POSInstalled="@posInstalled"
+                           asp-route-TelematicDeviceInstalled="@telematicDeviceInstalled">...</a>
+                    </li>
+                }
+
+                <li class="page-item @(Model.PageIndex == Model.TotalPages ? "disabled" : "")">
+                    
+                    <a class="page-link" asp-action="List"
+                       asp-route-pageNo="@(Model.PageIndex + 1)"
+                       asp-route-SearchString="@searchString"
+                       asp-route-CctvInstalled="@cctvInstalled"
+                       asp-route-POSInstalled="@posInstalled"
+                       asp-route-TelematicDeviceInstalled="@telematicDeviceInstalled">Next</a>
+                </li>
+                <li class="page-item @(Model.PageIndex == Model.TotalPages ? "disabled" : "")">
+                    <a class="page-link" asp-action="List"
+                       asp-route-pageNo="@(Model.TotalPages)"
+                       asp-route-SearchString="@searchString"
+                       asp-route-CctvInstalled="@cctvInstalled"
+                       asp-route-POSInstalled="@posInstalled"
+                       asp-route-TelematicDeviceInstalled="@telematicDeviceInstalled">&raquo;&raquo;</a>
+                </li>
+            </ul>
+        </nav>
+       /* var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
         var nextDisabled = !Model.HasNextPage ? "disabled" : "";
         var totalPageNo = Model.TotalPageNo;
         var currentPageNo = Model.PageIndex;
@@ -194,8 +269,10 @@
 else
 {
             <span>No data available</span>
-            <a asp-controller="VehicleData" asp-action="List" class="fas far fa-sync fa-xl"></a>
+            <a asp-controller="VehicleData" asp-action="List" class="fas far fa-sync fa-xl"></a>*/
 }
+
+
 
 </div>
 
