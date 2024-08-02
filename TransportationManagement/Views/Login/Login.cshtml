@@ -17,8 +17,10 @@
     <link rel="icon" href="~/Content/images/MADB Logo.png" type="image/png">
 
     <meta name="description" content="" />
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.1/js/bootstrap.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.1/css/bootstrap.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+   
+    <link rel="stylesheet" href="~/resources/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/resources/jquery-ui/1.12.1/jquery-ui.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/resources/fontawesome/6.6.0/css/all.min.css" asp-append-version="true" />
 
     <link rel="stylesheet" href="~/LoginFormStyle/boxicons.css" />
     <link rel="stylesheet" href="~/LoginFormStyle/core.css" class="template-customizer-core-css" />
@@ -27,7 +29,6 @@
     <link rel="stylesheet" href="~/LoginFormStyle/page-auth.css" />
     <script src="~/LoginFormStyle/js/helpers.js"></script>
     <script src="~/LoginFormStyle/js/config.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 </head>
 <body>
@@ -127,7 +128,13 @@
         </div>
     </div>
 </div>
-    <script src="~/Content/bower_components/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/resources/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/resources/jquery-ui/1.12.1/jquery-ui.min.js" asp-append-version="true"></script>
+    <script>
+        $.widget.bridge('uibutton', $.ui.button);
+    </script>
+    <script src="~/resources/bootstrap/dist/js/bootstrap.min.js" asp-append-version="true"></script>
+    <script src="~/resources/bootstrap/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/LoginFormStyle/js/main.js"></script>
 </body>

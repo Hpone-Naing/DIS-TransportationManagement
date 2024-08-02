@@ -155,7 +155,6 @@
         </tbody>
     </table>
 
-    <br />
 @if (Model != null && Model.Any())
 {
 
@@ -261,15 +260,18 @@
            asp-route-TelematicDeviceInstalled="@telematicDeviceInstalled"
     class="link btn btn-primary btn-sm @nextDisabled">
         Next
-    </a>
+    </a>*/
     <span>
         Page No : @currentPageNo of @totalPageNo
     </span>
+        <a asp-controller="VehicleData" asp-action="List" class="fas far fa-sync fa-xl" 
+            style="text-decoration: none;"></a>
+
 }
 else
 {
             <span>No data available</span>
-            <a asp-controller="VehicleData" asp-action="List" class="fas far fa-sync fa-xl"></a>*/
+            <a asp-controller="VehicleData" asp-action="List" class="fas far fa-sync fa-xl"></a>
 }
 
 
