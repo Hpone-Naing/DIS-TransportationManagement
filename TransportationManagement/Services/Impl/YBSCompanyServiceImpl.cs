@@ -1,6 +1,7 @@
 ﻿using TransportationManagement.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TransportationManagement.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace TransportationManagement.Services.Impl
 {
@@ -18,8 +19,23 @@ namespace TransportationManagement.Services.Impl
             _logger.LogInformation(">>>>>>>>>> [YBSCompanyServiceImpl][GetAllYBSCompanys] Get YBSCompany list. <<<<<<<<<<");
             try
             {
+                var yBSCompanies = _context.YBSCompanies
+                    .Where(company => !company.IsDeleted)
+                    .ToList();
+
+                var ybsTypeCounts = _context.YBSTypes
+                    .GroupBy(ybsType => ybsType.YBSCompanyPkid)
+                    .Select(group => new { YBSCompanyPkid = group.Key, Count = group.Count() })
+                    .ToList();
+
+                foreach (var company in yBSCompanies)
+                {
+                    var ybsTypeCount = ybsTypeCounts.FirstOrDefault(x => x.YBSCompanyPkid == company.YBSCompanyPkid);
+                    company.TotalYBSNumber = ybsTypeCount != null ? ybsTypeCount.Count : 0;
+                }
+
                 _logger.LogInformation($">>>>>>>>>> Success. Get YBSCompany list. <<<<<<<<<<");
-                return GetAll().Where(ybsCompany => !ybsCompany.IsDeleted).ToList();
+                return yBSCompanies;
             }
             catch (Exception e)
             {

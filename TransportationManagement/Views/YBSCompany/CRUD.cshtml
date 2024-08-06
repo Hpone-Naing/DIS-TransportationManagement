@@ -33,6 +33,18 @@
                         <th class="text-white">
                             YBSCompanies
                         </th>
+                        <th class="text-white">
+                            Owner Name
+                        </th>
+                        <th class="text-white">
+                            Address
+                        </th>
+                        <th class="text-white">
+                            Phone Number
+                        </th>
+                        <th class="text-white">
+                            ယာဥ်လိုင်းအရေအတွက်
+                        </th>
                         <th class="text-white">လုပ်ဆောင်ချက်များ</th>
                     </tr>
                 </thead>
@@ -53,9 +65,17 @@
                                 @i
                             </td>
                             <td class="name">
-                                @Html.DisplayFor(modelItem => item.YBSCompanyName)
+                                <a class="text-primary" asp-action="List" asp-controller="VehicleData"
+                                   asp-route-SearchString="@item.YBSCompanyName">@item.YBSCompanyName</a>
                             </td>
+                            <td>@item.OwnerName</td>
 
+                            <td>@item.Address</td>
+                            <td>@item.PhoneNumber</td>
+                            <td>
+                                <a class="text-primary" asp-action="List" asp-controller="YBSType"
+                                   asp-route-ybsCompanyPkId="@item.YBSCompanyPkid">@item.TotalYBSNumber</a>
+                            </td>
                             <td class="d-flex justify-content-center align-item-center">
                                 <a class="editBtn btn btn-outline me-3" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-duotone fa-pencil fa-lg" style="color:black"></i></a>
                                 <a class="deleteBtn btn btn-outline" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-regular fa-trash fa-lg text-danger"></i></a>
@@ -95,7 +115,7 @@
         </div>
     </div>
 
-    <div id="create" class="col-lg-4 col-md-4 col-sm-12 mt-3 shadow rounded" style="display:none;background-color: silver; height: 170px;max-height: 200px;">
+    <div id="create" class="col-lg-4 col-md-4 col-sm-12 mt-3 shadow rounded" style="display:none;background-color: silver; height: 350px;max-height: 400px;">
         <div class="d-flex justify-content-between mb-3 mt-1" style="/*! background-color: yellow; */">
             <div class="">အချက်အလက်များထည့်သွင်းရန်</div>
             <div class="d-flex justify-content-end mt-3 ms-4" style="cursor: pointer;" onclick="hideForm('create')">
@@ -109,13 +129,28 @@
                 <input id="nameCreate" asp-for="YBSCompany.YBSCompanyName" class="form-control" required/>
                     <span asp-validation-for="YBSCompany.YBSCompanyName" class="text-danger"></span>
                 </div>
+            <div class="form-group">
+                <label asp-for="YBSCompany.OwnerName" class="control-label"></label>
+                <input id="nameCreate" asp-for="YBSCompany.OwnerName" class="form-control" required />
+                <span asp-validation-for="YBSCompany.OwnerName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="YBSCompany.Address" class="control-label"></label>
+                <input id="nameCreate" asp-for="YBSCompany.Address" class="form-control" required />
+                <span asp-validation-for="YBSCompany.Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="YBSCompany.PhoneNumber" class="control-label"></label>
+                <input id="nameCreate" asp-for="YBSCompany.PhoneNumber" class="form-control" required />
+                <span asp-validation-for="YBSCompany.PhoneNumber" class="text-danger"></span>
+            </div>
                 <div class="d-flex justify-content-center align-item-center mt-2">
                     <input type="submit" value="Create" class="btn btn-default">
                 </div>
             </form>
     </div>
 
-    <div id="edit" class="col-lg-4 col-md-4 col-sm-12 mt-3 shadow rounded" style="display:none;background-color: silver; height: 170px;max-height: 200px;">
+    <div id="edit" class="col-lg-4 col-md-4 col-sm-12 mt-3 shadow rounded" style="display:none;background-color: silver; height: 350px;max-height: 400px;">
         <div class="d-flex justify-content-between mb-3 mt-1">
             <div class="">အချက်အလက်များပြင်ဆင်ရန်</div>
             <div class="d-flex justify-content-end mt-3 ms-4" style="cursor: pointer;" onclick="hideForm('edit')">
@@ -130,6 +165,21 @@
                 <label asp-for="YBSCompany.YBSCompanyName" class="control-label"></label>
                 <input id="nameEdit" asp-for="YBSCompany.YBSCompanyName" class="form-control" required />
                 <span asp-validation-for="YBSCompany.YBSCompanyName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="YBSCompany.OwnerName" class="control-label"></label>
+                <input id="nameCreate" asp-for="YBSCompany.OwnerName" class="form-control" required />
+                <span asp-validation-for="YBSCompany.OwnerName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="YBSCompany.Address" class="control-label"></label>
+                <input id="nameCreate" asp-for="YBSCompany.Address" class="form-control" required />
+                <span asp-validation-for="YBSCompany.Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="YBSCompany.PhoneNumber" class="control-label"></label>
+                <input id="nameCreate" asp-for="YBSCompany.PhoneNumber" class="form-control" required />
+                <span asp-validation-for="YBSCompany.PhoneNumber" class="text-danger"></span>
             </div>
             <div class="d-flex justify-content-center align-item-center mt-2">
                 <input type="submit" value="Edit" class="btn btn-default">

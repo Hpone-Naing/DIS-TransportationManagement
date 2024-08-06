@@ -33,6 +33,9 @@
                         <th class="text-white">
                             ယာဥ်အမျိုးအစား
                         </th>
+                        <th class="text-white">
+                            ယာဥ်အစီးရေ
+                        </th>
                         <th class="text-white">လုပ်ဆောင်ချက်များ</th>
                     </tr>
                 </thead>
@@ -53,9 +56,12 @@
                                 @i
                             </td>
                             <td class="name">
-                                @Html.DisplayFor(modelItem => item.ManufacturerName)
+                                <a class="text-primary" asp-action="List" asp-controller="VehicleData"
+                                   asp-route-SearchString="@item.ManufacturerName">@item.ManufacturerName</a>
                             </td>
-
+                            <td>
+                                @item.TotalYBSNumber
+                            </td>
                             <td class="d-flex justify-content-center align-item-center">
                                 <a class="editBtn btn btn-outline me-3" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-duotone fa-pencil fa-lg" style="color:black"></i></a>
                                 <a class="deleteBtn btn btn-outline" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-regular fa-trash fa-lg text-danger"></i></a>

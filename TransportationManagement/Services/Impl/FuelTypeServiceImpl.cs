@@ -33,8 +33,23 @@ namespace TransportationManagement.Services.Impl
             try
             {
                 _logger.LogInformation($">>>>>>>>>> Success. Get FuelType pagination list. <<<<<<<<<<");
+                List<FuelType> fuelTypes = _context.FuelTypes
+                                             .Where(fuel => !fuel.IsDeleted)
+                                             .GroupBy(fuel => fuel.FuelTypePkid)
+                                             .Select(g => g.First())
+                                             .ToList();
+                var vehicleDataCount = _context.VehicleDatas
+                    .GroupBy(vehicle => vehicle.FuelTypePkid)
+                    .Select(group => new { FuelTypePkId = group.Key, Count = group.Count() })
+                    .ToList();
 
-                return GetAllWithPagin(GetAllFuelTypes(), pageNo, PageSize);
+                foreach (var fuelType in fuelTypes)
+                {
+                    var ybsTypeCount = vehicleDataCount.FirstOrDefault(x => x.FuelTypePkId == fuelType.FuelTypePkid);
+                    fuelType.TotalYBSNumber = ybsTypeCount != null ? ybsTypeCount.Count : 0;
+                }
+                return GetAllWithPagin(fuelTypes, pageNo, PageSize);
+                //return GetAllWithPagin(GetAllFuelTypes(), pageNo, PageSize);
             }
             catch (Exception e)
             {

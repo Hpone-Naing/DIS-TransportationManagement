@@ -8,9 +8,12 @@
 
         public int PageSize { get; set; }
 
+        public int TotalCount { get; private set; }
+
         public PagingList(List<T> items, int count, int pageIndex, int pageSize)
         {
             PageIndex = pageIndex;
+            TotalCount = count;
             TotalPages = (int)Math.Ceiling(count / (double)pageSize);
             PageSize = pageSize;
             CurrentSet  = (int)Math.Ceiling((decimal)pageIndex / pageSize);

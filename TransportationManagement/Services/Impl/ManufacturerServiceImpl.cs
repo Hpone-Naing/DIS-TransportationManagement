@@ -35,7 +35,23 @@ namespace TransportationManagement.Services.Impl
             try
             {
                 _logger.LogInformation($">>>>>>>>>> Success. Get Manufacturer pagination list. <<<<<<<<<<");
-                return GetAllWithPagin(GetAllManufacturers(), pageNo, PageSize);
+                List<Manufacturer> manufacturers = _context.Manufacturers
+                                             .Where(manufacturer => !manufacturer.IsDeleted)
+                                             .GroupBy(manufacturer => manufacturer.ManufacturerPkid)
+                                             .Select(g => g.First())
+                                             .ToList();
+                var vehicleDataCount = _context.VehicleDatas
+                    .GroupBy(vehicle => vehicle.VehicleManufacturer)
+                    .Select(group => new { ManufacturerPkid = group.Key, Count = group.Count() })
+                    .ToList();
+
+                foreach (var manufacturer in manufacturers)
+                {
+                    var ybsTypeCount = vehicleDataCount.FirstOrDefault(x => x.ManufacturerPkid == manufacturer.ManufacturerPkid);
+                    manufacturer.TotalYBSNumber = ybsTypeCount != null ? ybsTypeCount.Count : 0;
+                }
+                return GetAllWithPagin(manufacturers, pageNo, PageSize);
+                //return GetAllWithPagin(GetAllManufacturers(), pageNo, PageSize);
             }
             catch (Exception e)
             {

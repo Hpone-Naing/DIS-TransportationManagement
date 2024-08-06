@@ -88,17 +88,20 @@ namespace TransportationManagement.Services.Impl
                 throw;
             }
         }
+
         private IQueryable<T> FiltersWithoutAdvSearchOptions<T>(IQueryable<T> query, AdvanceSearch advanceSearch) where T : class
         {
             _logger.LogInformation(">>>>>>>>>> [AbstractServiceImpl][FiltersWithoutAdvSearchOptions] Check advanceSearch values contain in table columns value <<<<<<<<<<");
             try
             {
                 _logger.LogInformation($">>>>>>>>>> Success. Check advanceSearch values contain in table columns value. <<<<<<<<<<");
-                return query.Where(obj =>
-                (!string.IsNullOrEmpty(advanceSearch.POSInstalled) && EF.Property<string>(obj, "POSInstalled") != null && EF.Property<string>(obj, "POSInstalled").ToLower().Contains(advanceSearch.POSInstalled.ToLower()))
-                || (!string.IsNullOrEmpty(advanceSearch.CctvInstalled) && EF.Property<string>(obj, "CctvInstalled") != null && EF.Property<string>(obj, "CctvInstalled").ToLower().Contains(advanceSearch.CctvInstalled.ToLower()))
-                || (!string.IsNullOrEmpty(advanceSearch.TelematicDeviceInstalled) && EF.Property<string>(obj, "TelematicDeviceInstalled") != null && EF.Property<string>(obj, "TelematicDeviceInstalled").ToLower().Contains(advanceSearch.TelematicDeviceInstalled.ToLower()))
-                );
+                var queryable = query as IQueryable<VehicleData>;
+                return query = query.Where(obj =>
+                (string.IsNullOrEmpty(advanceSearch.POSInstalled) || EF.Property<string>(obj, "POSInstalled") != null && EF.Property<string>(obj, "POSInstalled").ToLower().Contains(advanceSearch.POSInstalled.ToLower())) &&
+                (string.IsNullOrEmpty(advanceSearch.CctvInstalled) || EF.Property<string>(obj, "CctvInstalled") != null && EF.Property<string>(obj, "CctvInstalled").ToLower().Contains(advanceSearch.CctvInstalled.ToLower())) &&
+                (string.IsNullOrEmpty(advanceSearch.TelematicDeviceInstalled) || EF.Property<string>(obj, "TelematicDeviceInstalled") != null && EF.Property<string>(obj, "TelematicDeviceInstalled").ToLower().Contains(advanceSearch.TelematicDeviceInstalled.ToLower())) &&
+                (string.IsNullOrEmpty(advanceSearch.FuelType) || EF.Property<string>(obj, "FuelTypeName") != null && EF.Property<string>(obj, "FuelTypeName").ToLower().Contains(advanceSearch.FuelType.ToLower()))
+            );
             }
             catch (Exception e)
             {

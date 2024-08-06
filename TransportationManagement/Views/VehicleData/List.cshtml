@@ -15,7 +15,7 @@
 {
     <div class="alert @TempData["CssColor"]"> @TempData["Message"] </div>
 }
-<div style="background-color: royalblue;" class="row border border-dark">
+<div style="background-color: #4368d6d4" class="row border border-dark">
 
     <div class="d-flex justify-content-center align-item-center p-1">
         <label class="text-white"> စာရင်း </label>
@@ -46,6 +46,7 @@
     </div>*@
 </div>
 
+<div class="mt-3"><label class="text-primary fw-bold">@ViewBag.SearchString မော်တော်ယာဥ်အရေအတွက် @Model.TotalCount စီးရှိပါသည် </label></div>
 <div class="row justify-content-between mt-2">
         <div class="col-5">
         <form method="get" action="@Url.Action("List", "VehicleData")">
@@ -54,6 +55,10 @@
             <input type="hidden" name="CctvInstalled" value="@ViewBag.CctvInstalled">
             <input type="hidden" name="POSInstalled" value="@ViewBag.POSInstalled">
             <input type="hidden" name="TelematicDeviceInstalled" value="@ViewBag.TelematicDeviceInstalled">
+            <input type="hidden" name="YBSCompany" value="@ViewBag.YBSCompany">
+            <input type="hidden" name="Manufacturer" value="@ViewBag.Manufacturer">
+            <input type="hidden" name="YBSName" value="@ViewBag.YBSName">
+            <input type="hidden" name="FuelType" value="@ViewBag.FuelType">
             <input type="hidden" name="pageNo" asp-for="@(Model.PageIndex)">
             <div class="p-2 bd-highlight">
                 All
@@ -82,18 +87,44 @@
                 <th class="text-white">
                     စဥ်
                 </th>
-                <th class ="text-white">
-                    ယာဥ်လိုင်း
+                <th class="text-white">
+                    ကုမ္ပဏီ
                 </th>
                 <th class="text-white">
                     ယာဥ်အမှတ်
                 </th>
-
-                <th class="text-white">
-                    မှတ်တိုင်အရေအတွက်
+                <th class ="text-white">
+                    ယာဥ်လိုင်း
                 </th>
                 <th class="text-white">
-                    ထုတ်လုပ်သည့်ခန့်မှန်းနှစ်
+                    အမျိုးအမည် 
+                </th>
+                <th class="text-white">
+                    အမျိုးအစား
+                </th>
+                <th class="text-white">
+                    ထုတ်လုပ်သည့်ခုနှစ်
+                </th>
+                <th class="text-white">
+                    စက်သုံးဆီ 
+                </th>
+                <th class="text-white">
+                    CNGအိုးသက်တမ်း
+                </th>
+                <th class="text-white">
+                    Operator Name
+                </th>
+                <th class="text-white">
+                    ကမရ(၃)အမည်ပေါက်
+                </th>
+                <th class="text-white">
+                    Telematic Device Install
+                </th>
+                <th class="text-white">
+                    CCTV Install
+                </th>
+                <th class="text-white">
+                    POS Install
                 </th>
                 <th class="text-white">လုပ်ဆောက်ချက်များ</th>
             </tr>
@@ -106,19 +137,46 @@
                         @Html.DisplayFor(modelItem => item.SerialNo)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.YBSName)
+                        @Html.DisplayFor(modelItem => item.YBSCompany.YBSCompanyName)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.VehicleNumber)
                     </td>
-
                     <td>
-                        @Html.DisplayFor(modelItem => item.TotalBusStop)
+                        @Html.DisplayFor(modelItem => item.YBSType.YBSTypeName)
                     </td>
-
+                    <td>
+                        @Html.DisplayFor(modelItem => item.YBSName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Manufacturer.ManufacturerName)
+                    </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.ManufacturedYear)
                     </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FuelType.FuelTypeName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CngQty)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OperatorName)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RegistrantOperatorName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TelematicDeviceInstalled)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CctvInstalled)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.POSInstalled)
+                    </td>
+                    
                     <td>
                         <a  class="btn btn-outline link" data-toggle="tooltip" data-placement="top" title="Edit" asp-action="Edit" asp-route-id="@item.VehicleDataPkid"><i class="fa fa-duotone fa-pencil fa-lg" style="color:black"></i></a>|
                         <a  class="btn btn-outline link" data-toggle="tooltip" data-placement="top" title="Detail" asp-action="Details" asp-route-id="@item.VehicleDataPkid"><i class="fa fa-info-circle fa-lg text-primary"></i></a> |
@@ -162,11 +220,15 @@
         var totalPageNo = Model.TotalPageNo;
         var currentPageNo = Model.PageIndex;
         var searchString = ViewBag.SearchString ?? null;
+        var searchOption = ViewBag.SearchOption ?? null;
         var cctvInstalled = ViewBag.CctvInstalled ?? null;
         var posInstalled = ViewBag.POSInstalled ?? null;
         var telematicDeviceInstalled = ViewBag.TelematicDeviceInstalled ?? null;
-        var cngQty = ViewBag.CngQty ?? null;
-        var cngQtyOption = ViewBag.CngQtyOption ?? null;
+        var ybsCompany = ViewBag.YBSCompany ?? null;
+        var manufacturer = ViewBag.Manufacturer ?? null;
+        var ybsName = ViewBag.YBSName ?? null;
+        var fuelType = ViewBag.FuelType ?? null;
+        
 
         <nav aria-label="Page navigation">
             <ul class="pagination">
@@ -174,30 +236,45 @@
                     <a class="page-link" asp-action="List"
                        asp-route-pageNo="1"
                        asp-route-SearchString="@searchString"
+                       asp-route-searchOption="@searchOption"
                        asp-route-CctvInstalled="@cctvInstalled"
                        asp-route-POSInstalled="@posInstalled"
-                       asp-route-TelematicDeviceInstalled="@telematicDeviceInstalled">&laquo;&laquo;</a>
+                       asp-route-TelematicDeviceInstalled="@telematicDeviceInstalled"
+                       asp-route-YBSCompany="@ybsCompany"
+                       asp-route-Manufacturer="@manufacturer"
+                       asp-route-YBSName="@ybsName"
+                       asp-route-FuelType="@fuelType">&laquo;&laquo;</a>
                 </li>
                 <li class="page-item @(Model.PageIndex == 1 ? "disabled" : "")">
                     <a class="page-link" asp-action="List"
                        asp-route-pageNo="@(Model.PageIndex - 1)"
                        asp-route-SearchString="@searchString"
+                       asp-route-searchOption="@searchOption"
                        asp-route-CctvInstalled="@cctvInstalled"
                        asp-route-POSInstalled="@posInstalled"
-                       asp-route-TelematicDeviceInstalled="@telematicDeviceInstalled">Previous</a>
+                       asp-route-TelematicDeviceInstalled="@telematicDeviceInstalled"
+                       asp-route-YBSCompany="@ybsCompany"
+                       asp-route-Manufacturer="@manufacturer"
+                       asp-route-YBSName="@ybsName"
+                       asp-route-FuelType="@fuelType">Previous</a>
                 </li>
 
                 @for (int i = (Model.CurrentSet - 1) * Model.PageSize + 1;
                i <= Math.Min(Model.CurrentSet * Model.PageSize, Model.TotalPages);
                i++)
-                {
+                {                    
                     <li class="page-item @(Model.PageIndex == i ? "active" : "")">
                         <a class="page-link" asp-action="List"
                            asp-route-pageNo="@i"
                            asp-route-SearchString="@searchString"
+                           asp-route-searchOption="@searchOption"
                            asp-route-CctvInstalled="@cctvInstalled"
                            asp-route-POSInstalled="@posInstalled"
-                           asp-route-TelematicDeviceInstalled="@telematicDeviceInstalled">@i</a>
+                           asp-route-TelematicDeviceInstalled="@telematicDeviceInstalled"
+                           asp-route-YBSCompany="@ybsCompany"
+                           asp-route-Manufacturer="@manufacturer"
+                           asp-route-YBSName="@ybsName"
+                           asp-route-FuelType="@fuelType">@i</a>
                     </li>
                 }
 
@@ -207,9 +284,14 @@
                         <a class="page-link" asp-action="List"
                            asp-route-pageNo="@(Model.CurrentSet * Model.PageSize + 1)"
                            asp-route-SearchString="@searchString"
+                           asp-route-searchOption="@searchOption"
                            asp-route-CctvInstalled="@cctvInstalled"
                            asp-route-POSInstalled="@posInstalled"
-                           asp-route-TelematicDeviceInstalled="@telematicDeviceInstalled">...</a>
+                           asp-route-TelematicDeviceInstalled="@telematicDeviceInstalled"
+                           asp-route-YBSCompany="@ybsCompany"
+                           asp-route-Manufacturer="@manufacturer"
+                           asp-route-YBSName="@ybsName"
+                           asp-route-FuelType="@fuelType">...</a>
                     </li>
                 }
 
@@ -218,17 +300,27 @@
                     <a class="page-link" asp-action="List"
                        asp-route-pageNo="@(Model.PageIndex + 1)"
                        asp-route-SearchString="@searchString"
+                       asp-route-searchOption="@searchOption"
                        asp-route-CctvInstalled="@cctvInstalled"
                        asp-route-POSInstalled="@posInstalled"
-                       asp-route-TelematicDeviceInstalled="@telematicDeviceInstalled">Next</a>
+                       asp-route-TelematicDeviceInstalled="@telematicDeviceInstalled"
+                       asp-route-YBSCompany="@ybsCompany"
+                       asp-route-Manufacturer="@manufacturer"
+                       asp-route-YBSName="@ybsName"
+                       asp-route-FuelType="@fuelType">Next</a>
                 </li>
                 <li class="page-item @(Model.PageIndex == Model.TotalPages ? "disabled" : "")">
                     <a class="page-link" asp-action="List"
                        asp-route-pageNo="@(Model.TotalPages)"
                        asp-route-SearchString="@searchString"
+                       asp-route-searchOption="@searchOption"
                        asp-route-CctvInstalled="@cctvInstalled"
                        asp-route-POSInstalled="@posInstalled"
-                       asp-route-TelematicDeviceInstalled="@telematicDeviceInstalled">&raquo;&raquo;</a>
+                       asp-route-TelematicDeviceInstalled="@telematicDeviceInstalled"
+                       asp-route-YBSCompany="@ybsCompany"
+                       asp-route-Manufacturer="@manufacturer"
+                       asp-route-YBSName="@ybsName"
+                       asp-route-FuelType="@fuelType">&raquo;&raquo;</a>
                 </li>
             </ul>
         </nav>
@@ -280,7 +372,7 @@ else
 
 <!-- Advance Search Modal -->
 <div class="modal fade" id="advanceSearchModel" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
         <div class="modal-content shadow rounded">
             <div class="modal-header" style="background-color: royalblue;">
                 <h5 class="text-white"> Vehicle Advance Search </h5>
@@ -288,10 +380,94 @@ else
             </div>
             <div class="modal-body">
                 <form method="get" action="@Url.Action("List", "VehicleData")">
-                    <div class="row">
-                        <div class="col">
+                    <div class="row mt-3">
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="YBSCompany" class="control-label">YBS Company</label>
+                            </div>
+                            <select name="YBSCompany" class="form-control">
+                                <option value="" selected>ရွေးချယ်ရန်</option>
+                                <option value="YUPT">YUPT</option>
+                                <option value="YBPC">YBPC</option>
+                                <option value="ဗန္ဓုလအများနှင့်သက်ဆိုင်သောကုမ္ပဏီလီမိတက်">ဗန္ဓုလအများနှင့်သက်ဆိုင်သောကုမ္ပဏီလီမိတက်</option>
+                                <option value="Omni Focus">Omni Focus</option>
+                                <option value="‌ရွှေတောင်ပိုင်း">‌ရွှေတောင်ပိုင်း</option>
+                                <option value="Power Eleven">Power Eleven</option>
+                                <option value="ရွှေလမ်းခင်း">ရွှေလမ်းခင်း</option>
+                                <option value="RCBT">RCBT</option>
+                                <option value="စံဝေလ">စံဝေလ</option>
+                                <option value="Trans Link">Trans Link</option>
+                                <option value="City Liner">City Liner</option>
+                                <option value="ရွှေပြည်သာသား">ရွှေပြည်သာသား</option>
+                                <option value="Transport Star">Transport Star</option>
+                                <option value="ပြည်စံသူ">ပြည်စံသူ</option>
+                                <option value="ကုန်းဘောင်">ကုန်းဘောင်</option>
+                                <option value="တိုက်ကြီးသား">တိုက်ကြီးသား</option>
+                                <option value="ဘုရင့်နောင်">ဘုရင့်နောင်</option>
+                                <option value="သက်ယဉ်အောင်">သက်ယဉ်အောင်</option>
+                                <option value="အမြင့်မြတ်ဆုံး">အမြင့်မြတ်ဆုံး</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="Manufacturer" class="control-label">ယာဥ်အမျိုးအစား</label>
+                            </div>
+                            <select name="Manufacturer" class="form-control">
+                                <option value="" selected>ရွေးချယ်ရန်</option>
+                                <option value="Ankai">Ankai</option>
+                                <option value="Foton">Foton</option>
+                                <option value="Yutong">Yutong</option>
+                                <option value="Hyundai">Hyundai</option>
+                                <option value="King Long">King Long</option>
+                                <option value="Higer">Higer</option>
+                                <option value="Scania">Scania</option>
+                                <option value="Daewoo">Daewoo</option>
+                                <option value="Aero Town">Aero Town</option>
+                                <option value="kmjata">kmjata</option>
+                                <option value="KmJtc">KmJtc</option>
+                                <option value="Mazda">Mazda</option>
+                                <option value="Civilian">Civilian</option>
+                                <option value="Golden Dragon">Golden Dragon</option>
+                                <option value="Zhong Tong">Zhong Tong</option>
+                                <option value="Rosa">Rosa</option>
+                                <option value="Hino">Hino</option>
+                                <option value="Isuzu">Isuzu</option>
+                                <option value="ToyotaCoaster">
+                                    ToyotaCoaster
+                                </option>
+                                <option value="DONGFENG">DONGFENG</option>
+                                <option value="JIJIANG">JIJIANG</option>
+                                <option value="SUZUKI">SUZUKI</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="YBSName" class="control-label">အမျိုးအမည်</label>
+                            </div>
+                            <select name="YBSName" class="form-control">
+                                <option value="" selected>ရွေးချယ်ရန်</option>
+                                <option value="City">City</option>
+                                <option value="Mini">Mini</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="FuelType" class="control-label">စက်သုံးဆီ</label>
+                            </div>
+                            <select name="FuelType" class="form-control">
+                                <option value="" selected>ရွေးချယ်ရန်</option>
+                                <option value="cng">CNG</option>
+                                <option value="diesel">Diesel</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-lg-4 col-md-4 col-sm-12">
                                 <div class="form-group">
-                                <label for="POSInstalled" class="control-label">POS တပ်ဆင်ထားမှု</label>
+                                <label for="POSInstalled" class="control-label">POS</label>
                                 </div>
                             <select name="POSInstalled" class="form-control">
                                     <option value="" selected>ရွေးချယ်ရန်</option>
@@ -302,11 +478,9 @@ else
                                     <option value="InProgress">ဆောင်ရွက်ဆဲ</option>
                                 </select>
                         </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col">
+                        <div class="col-lg-4 col-md-4 col-sm-12">
                             <div class="form-group">
-                                <label for="CctvInstalled" class="control-label">CCTVတပ်ဆင်ထားမှု</label>
+                                <label for="CctvInstalled" class="control-label">CCTV</label>
                             </div>
                             <select name="CctvInstalled" class="form-control">
                                 <option value="" selected>ရွေးချယ်ရန်</option>
@@ -317,12 +491,9 @@ else
                                 <option value="InProgress">ဆောင်ရွက်ဆဲ</option>
                             </select>
                         </div>
-                    </div>
-
-                    <div class="row mt-3">
-                        <div class="col">
+                        <div class="col-lg-4 col-md-4 col-sm-12">
                             <div class="form-group">
-                                <label for="TelematicDeviceInstalled" class="control-label">TelematicDeviceတပ်ဆင်ထားမှု</label>
+                                <label for="TelematicDeviceInstalled" class="control-label">TelematicDevice</label>
                             </div>
                             <select name="TelematicDeviceInstalled" class="form-control">
                                 <option value="" selected>ရွေးချယ်ရန်</option>
@@ -334,8 +505,6 @@ else
                             </select>
                         </div>
                     </div>
-
-                    
                     <button type="submit" class="btn btn-info mt-3 text-white" style="background-color: #3e81aa;">Search</button>
 
                 </form>

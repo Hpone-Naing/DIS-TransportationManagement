@@ -53,6 +53,13 @@ namespace TransportationManagement.Controllers.YBSTypeController
             return View("CRUD", MakeYBSTypeView(pageNo, ybsCompanyPkId));
         }
 
+        /*public IActionResult YBSTypesByYBSCompany(int? pageNo, int ybsCompanyPkId)
+        {
+            if (!SessionUtil.IsActiveSession(HttpContext))
+                return RedirectToAction("Index", "Login");
+            return View("CRUD", MakeYBSTypeView(pageNo, ybsCompanyPkId));
+        }*/
+
         [ValidateAntiForgeryToken, HttpPost]
         public IActionResult Create(int ybsCompanyPkId, YBSType yBSType, int? pageNo)
         {

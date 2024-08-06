@@ -9,7 +9,7 @@ namespace TransportationManagement.Services
     {
         bool CreateVehicle(VehicleData vehicleData);
         List<VehicleData> GetAllVehicles();
-        PagingList<VehicleData> GetAllVehiclesWithPagin(string searchString, AdvanceSearch advanceSearch, int? pageNo, int PageSize);
+        PagingList<VehicleData> GetAllVehiclesWithPagin(string searchString, AdvanceSearch advanceSearch, int? pageNo, int PageSize, string? searchOption = "");
 
         public PagingList<VehicleData> GetAllVehiclesWithPaginForExcelExport(string searchString, AdvanceSearch advanceSearch, int? pageNo, int PageSize);
         bool DeleteVehicle(VehicleData vehicleData);

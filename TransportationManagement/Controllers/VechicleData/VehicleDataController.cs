@@ -20,12 +20,17 @@ namespace TransportationManagement.Controllers.VechicleData
             _serviceFactory = serviceFactory;
         }
 
-        private void AddSearchDatasToViewBag(string searchString, AdvanceSearch advanceSearch)
+        private void AddSearchDatasToViewBag(string searchString, string searchOption, AdvanceSearch advanceSearch)
         {
             ViewBag.SearchString = searchString;
+            ViewBag.SearchOption = searchOption;
             ViewBag.CctvInstalled = advanceSearch.CctvInstalled;
             ViewBag.POSInstalled = advanceSearch.POSInstalled;
             ViewBag.TelematicDeviceInstalled = advanceSearch.TelematicDeviceInstalled;
+            ViewBag.YBSCompany = advanceSearch.YBSCompany;
+            ViewBag.Manufacturer = advanceSearch.Manufacturer;
+            ViewBag.YBSName = advanceSearch.YBSName;
+            ViewBag.FuelType = advanceSearch.FuelType;
         }
 
         private string MakeExcelFileName(string searchString, bool ExportAll, int? pageNo)
@@ -46,16 +51,17 @@ namespace TransportationManagement.Controllers.VechicleData
         public IActionResult List(int? pageNo)
         {
             string searchString = Request.Query["SearchString"];
+            string searchOption = Request.Query["searchOption"];
             AdvanceSearch advanceSearch = Utility.MakeAdvanceSearch(HttpContext);
             int pageSize = Utility.DEFAULT_PAGINATION_NUMBER;
-            AddSearchDatasToViewBag(searchString, advanceSearch);
+            AddSearchDatasToViewBag(searchString, searchOption, advanceSearch);
             try
             {
                 if (!SessionUtil.IsActiveSession(HttpContext))
                     return RedirectToAction("Index", "Login");
 
                 
-                PagingList<VehicleData> vehicleDatas = _serviceFactory.CreateVehicleDataService().GetAllVehiclesWithPagin(searchString, advanceSearch, pageNo, pageSize);
+                //PagingList<VehicleData> vehicleDatas1 = _serviceFactory.CreateVehicleDataService().GetAllVehiclesWithPagin(searchString, advanceSearch, pageNo??1, pageSize);
                 if (Request.Query["export"] == "excel")
                 {
                     Console.WriteLine("here export excel..........");
@@ -83,7 +89,7 @@ namespace TransportationManagement.Controllers.VechicleData
                         ws.Range(3, 12, 3, 14).Style.Font.FontSize = 14;
                         ws.Range("A3:N3").Style.Fill.BackgroundColor = XLColor.DodgerBlue;
 
-                        DataTable dt = _serviceFactory.CreateVehicleDataService().MakeVehicleDataExcelData(_serviceFactory.CreateVehicleDataService().GetAllVehiclesWithPaginForExcelExport(searchString, advanceSearch, pageNo, pageSize), ExportAll);
+                        DataTable dt = _serviceFactory.CreateVehicleDataService().MakeVehicleDataExcelData(_serviceFactory.CreateVehicleDataService().GetAllVehiclesWithPaginForExcelExport(searchString, advanceSearch, pageNo ?? 1, pageSize), ExportAll);
                         ws.Cell(4, 1).InsertTable(dt);
                         ws.Range("A4:N4").Style.Fill.BackgroundColor = XLColor.DodgerBlue;
                         for (int row = 5; row < dt.Rows.Count + 5; row++)
@@ -132,10 +138,10 @@ namespace TransportationManagement.Controllers.VechicleData
                         }
                     }
                 }
-                return View(_serviceFactory.CreateVehicleDataService().GetAllVehiclesWithPagin(searchString, advanceSearch, pageNo, pageSize));
+                return View(_serviceFactory.CreateVehicleDataService().GetAllVehiclesWithPagin(searchString, advanceSearch, pageNo ?? 1, pageSize, searchOption));
             } catch(Exception ne)
             {
-                PagingList<VehicleData> vehicleDatas = _serviceFactory.CreateVehicleDataService().GetAllVehiclesWithPagin(searchString, advanceSearch, pageNo, pageSize);
+                PagingList<VehicleData> vehicleDatas = _serviceFactory.CreateVehicleDataService().GetAllVehiclesWithPagin(searchString, advanceSearch, pageNo ?? 1, pageSize, searchOption);
                 Console.WriteLine("Error: " + ne);
                 Utility.AlertMessage(this, "Data Issue. Please fill VehicleData in database", "alert-danger");
                 return View(vehicleDatas);

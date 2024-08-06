@@ -85,6 +85,5 @@ namespace TransportationManagement.Models
         [DisplayName("ယာဥ်အမျိုးအများ")]
         public int VehicleManufacturer { get; set; }
         public Manufacturer Manufacturer { get; set; }
-
     }
 }

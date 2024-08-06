@@ -10,5 +10,7 @@
         public string FuelTypeName { get; set; }
         public bool IsDeleted { get; set; }
 
+        [NotMapped]
+        public int TotalYBSNumber { get; set; }
     }
 }

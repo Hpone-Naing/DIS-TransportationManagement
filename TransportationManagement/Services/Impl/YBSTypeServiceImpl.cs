@@ -2,6 +2,7 @@
 using TransportationManagement.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Text.Json;
 
 namespace TransportationManagement.Services.Impl
 {
@@ -31,13 +32,43 @@ namespace TransportationManagement.Services.Impl
             }
         }
 
-        public List<YBSType> GetUniqueYBSTypes()
+        public List<YBSType> GetUniqueYBSTypes(int ybsCompanyPkId = 0)
         {
             _logger.LogInformation(">>>>>>>>>> [YBSTypeServiceImpl][GetUniqueYBSTypes] Get unique YBSType list. <<<<<<<<<<");
             try
             {
                 _logger.LogInformation($">>>>>>>>>> Success. Get unique YBSType list. <<<<<<<<<<");
-                return GetUniqueList(ybsType => ybsType.YBSTypePkid).Where(ybsType => !ybsType.IsDeleted).ToList();
+                List<YBSType> ybsTypes;
+                if (ybsCompanyPkId > 0)
+                {
+                    ybsTypes = _context.YBSTypes
+                                         .Where(ybsType => !ybsType.IsDeleted && ybsType.YBSCompanyPkid == ybsCompanyPkId)
+                                         .GroupBy(ybsType => ybsType.YBSTypePkid)
+                                         .Select(g => g.First())
+                                         .ToList();
+                }
+                else
+                {
+                    ybsTypes = _context.YBSTypes
+                                             .Where(ybsType => !ybsType.IsDeleted)
+                                             .GroupBy(ybsType => ybsType.YBSTypePkid)
+                                             .Select(g => g.First())
+                                             .ToList();
+                }
+
+                var vehicleDataCount = _context.VehicleDatas
+                    .GroupBy(vehicle => vehicle.VehicleTypePkid)
+                    .Select(group => new { VehicleTypePkid = group.Key, Count = group.Count() })
+                    .ToList();
+
+                foreach (var ybsType in ybsTypes)
+                {
+                    var ybsTypeCount = vehicleDataCount.FirstOrDefault(x => x.VehicleTypePkid == ybsType.YBSTypePkid);
+                    ybsType.TotalYBSNumber = ybsTypeCount != null ? ybsTypeCount.Count : 0;
+                }
+
+                return ybsTypes;
+                //return GetUniqueList(ybsType => ybsType.YBSTypePkid).Where(ybsType => !ybsType.IsDeleted).ToList();
             }
             catch (Exception e)
             {
@@ -48,11 +79,13 @@ namespace TransportationManagement.Services.Impl
 
         public List<YBSType> GetUniqueYBSTypesByYBSCompanyId(int ybsCompanyId = 1)
         {
+            Console.WriteLine("here GetUniqueYBSTypesByYBSCompanyId...............................................");
             _logger.LogInformation(">>>>>>>>>> [YBSTypeServiceImpl][GetUniqueYBSTypesByYBSCompanyId] Find YBSType by pkId. <<<<<<<<<<");
             try
             {
                 _logger.LogInformation($">>>>>>>>>> Success. Find YBSType by pkId. <<<<<<<<<<");
-                return GetListByIntVal("YBSCompanyPkid", ybsCompanyId).Where(ybsType => !ybsType.IsDeleted).ToList();
+
+                return GetUniqueYBSTypes(ybsCompanyId);//GetListByIntVal("YBSCompanyPkid", ybsCompanyId).Where(ybsType => !ybsType.IsDeleted).ToList();
             }
             catch (Exception e)
             {
@@ -90,7 +123,8 @@ namespace TransportationManagement.Services.Impl
                     ybsType => new SelectListItem
                     {
                         Value = ybsType.YBSTypePkid.ToString(),
-                        Text = ybsType.YBSTypeName
+                        Text = ybsType.YBSTypeName + ";" + ybsType.TotalYBSNumber,                        
+                       
                     }).ToList();
                 }
                 catch (Exception e)

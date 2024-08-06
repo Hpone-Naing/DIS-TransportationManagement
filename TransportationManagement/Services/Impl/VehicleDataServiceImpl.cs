@@ -134,109 +134,125 @@ namespace TransportationManagement.Services.Impl
             List<VehicleData> resultList = GetAllVehicleWithLazyLoad().Where(vehicle => IsSearchDataContained(vehicle, searchString)).AsQueryable().ToList();
             if (resultList.Count < 1)
             {
+                Console.WriteLine("here 1.............................");
                 resultList = GetAllVehicleWithYBSCompany().Where(vehicle => IsSearchDataContained(vehicle.YBSCompany, searchString)).AsQueryable().ToList();
             }
             if (resultList.Count < 1)
             {
+                Console.WriteLine("here 2.............................");
+
                 resultList = GetAllVehicleWithYBSType().Where(vehicle => IsSearchDataContained(vehicle.YBSType, searchString)).AsQueryable().ToList();
             }
             if (resultList.Count < 1)
             {
+                Console.WriteLine("here 3.............................");
+
                 resultList = GetAllVehicleWithFuelType().Where(vehicle => IsSearchDataContained(vehicle.FuelType, searchString)).AsQueryable().ToList();
             }
             if (resultList.Count < 1)
             {
+                Console.WriteLine("here 4.............................");
+
                 resultList = GetAllVehicleWithManufacturer().Where(vehicle => IsSearchDataContained(vehicle.Manufacturer, searchString)).AsQueryable().ToList();
             }
+            Console.WriteLine("here 5.............................");
+
             return resultList;
         }
 
-        public PagingList<VehicleData> GetAllVehiclesWithPagin(string searchWord, AdvanceSearch advanceSearch, int? pageNo, int PageSize)
+        public PagingList<VehicleData> GetAllVehiclesWithPagin(string searchWord, AdvanceSearch advanceSearch, int? pageNo, int PageSize, string? searchOption = "")
         {
-            _logger.LogInformation(">>>>>>>>>> [VehicleDataServiceImpl][GetAllVehiclesWithPagin] SearchAll or AdvanceSearch or GetAll VehicleData paginate eger load list. <<<<<<<<<<");
+            _logger.LogInformation(">>>>>>>>>> [VehicleDataServiceImpl][GetAllVehiclesWithPagin] SearchAll or AdvanceSearch or GetAll VehicleData paginate eager load list. <<<<<<<<<<");
+
             try
             {
-                List<VehicleData> vehicleDatas = GetAllVehicles();
-                List<VehicleData> resultList = new List<VehicleData>();
-                if (searchWord != null && !String.IsNullOrEmpty(searchWord))
+                IQueryable<VehicleData> query = _context.VehicleDatas
+                    .Where(vehicleData => vehicleData.IsDeleted == false);
+
+                if (!string.IsNullOrEmpty(searchWord))
                 {
                     string searchString = searchWord.Trim();
+                    _logger.LogInformation($">>>>>>>>>> Get searchAll result VehicleData paginate eager load list. <<<<<<<<<<");
+                    if (!string.IsNullOrEmpty(searchOption))
+                    {
+                        Console.WriteLine("here search option not null........................");
+                        query = query.Where(vehicle => vehicle.YBSType.YBSTypeName == searchString);
+                    }
+                    else
+                    {
+                        Console.WriteLine("here search option null........................");
 
-                    _logger.LogInformation($">>>>>>>>>> Get searchAll result VehicleData paginate eger load list. <<<<<<<<<<");
-                    try
-                    {
-                        Console.WriteLine("search string......................." + searchString);
-                        _logger.LogInformation($">>>>>>>>>> Success. Get searchAll result VehicleData paginate eger load list. <<<<<<<<<<");
-                        /*resultList = GetAllVehiclesEgerLoad()
-                            .Where(vehicle => IsSearchDataContained(vehicle, searchString) || IsSearchDataContained(vehicle.YBSCompany, searchString) || IsSearchDataContained(vehicle.YBSType, searchString) || IsSearchDataContained(vehicle.FuelType, searchString) || IsSearchDataContained(vehicle.Manufacturer, searchString))
-                            .Where(vehicle => IsSearchDataContained(vehicle.YBSCompany, searchString))
-                            .Where(vehicle => IsSearchDataContained(vehicle.YBSType, searchString))
-                            .Where(vehicle => IsSearchDataContained(vehicle.FuelType, searchString))
-                            .Where(vehicle => IsSearchDataContained(vehicle.Manufacturer, searchString))
-                            .AsQueryable()
-                            .ToList();
-                        resultList = GetAllVehicleWithLazyLoad().Where(vehicle => IsSearchDataContained(vehicle, searchString)).AsQueryable().ToList();
-                        if(resultList.Count < 1)
-                        {
-                            resultList = GetAllVehicleWithYBSCompany().Where(vehicle => IsSearchDataContained(vehicle.YBSCompany, searchString)).AsQueryable().ToList();
-                        }
-                        if(resultList.Count < 1)
-                        {
-                            resultList = GetAllVehicleWithYBSType().Where(vehicle => IsSearchDataContained(vehicle.YBSType, searchString)).AsQueryable().ToList();
-                        }
-                        if(resultList.Count < 1)
-                        {
-                            resultList = GetAllVehicleWithFuelType().Where(vehicle => IsSearchDataContained(vehicle.FuelType, searchString)).AsQueryable().ToList();
-                        }
-                        if(resultList.Count < 1)
-                        {
-                            resultList = GetAllVehicleWithManufacturer().Where(vehicle => IsSearchDataContained(vehicle.Manufacturer, searchString)).AsQueryable().ToList();
-                        }*/
-                        resultList = searchResultList(searchString);
-                    }
-                    catch (Exception e)
-                    {
-                        _logger.LogError(">>>>>>>>>> Error occur. Get searchAll result VehicleData paginate eger load list. <<<<<<<<<<" + e);
-                        throw;
+                        query = query.Where(vehicle =>
+                        EF.Functions.Like(vehicle.VehicleNumber ?? "", $"%{searchString}%") ||
+                        EF.Functions.Like(vehicle.YBSName ?? "", $"%{searchString}%") ||
+                        EF.Functions.Like(vehicle.ManufacturedYear ?? "", $"%{searchString}%") ||
+                        EF.Functions.Like(vehicle.CngQty ?? "", $"%{searchString}%") ||
+                        EF.Functions.Like(vehicle.ManufacturedYear ?? "", $"%{searchString}%") ||
+                        EF.Functions.Like(vehicle.OperatorName ?? "", $"%{searchString}%") ||
+                        EF.Functions.Like(vehicle.RegistrantOperatorName ?? "", $"%{searchString}%") ||
+
+                            EF.Functions.Like(vehicle.YBSCompany.YBSCompanyName, $"%{searchString}%") ||
+                            EF.Functions.Like(vehicle.YBSType.YBSTypeName, $"%{searchString}%") ||
+                            EF.Functions.Like(vehicle.FuelType.FuelTypeName, $"%{searchString}%") ||
+                            EF.Functions.Like(vehicle.Manufacturer.ManufacturerName, $"%{searchString}%"));
                     }
                 }
-                else if (!string.IsNullOrEmpty(advanceSearch.POSInstalled) || !string.IsNullOrEmpty(advanceSearch.TelematicDeviceInstalled) || !string.IsNullOrEmpty(advanceSearch.CctvInstalled))
+
+                else if (!string.IsNullOrEmpty(advanceSearch.POSInstalled) ||
+                         !string.IsNullOrEmpty(advanceSearch.TelematicDeviceInstalled) ||
+                         !string.IsNullOrEmpty(advanceSearch.CctvInstalled) ||
+                         !string.IsNullOrEmpty(advanceSearch.YBSCompany) ||
+                         !string.IsNullOrEmpty(advanceSearch.Manufacturer) ||
+                         !string.IsNullOrEmpty(advanceSearch.YBSName) ||
+                         !string.IsNullOrEmpty(advanceSearch.FuelType)
+                         )
                 {
-                    _logger.LogInformation($">>>>>>>>>> Get AdvanceSearch result VehicleData paginate eger load list. <<<<<<<<<<");
-                    try
-                    {
-                        _logger.LogInformation($">>>>>>>>>> Success. Get AdvanceSearch result VehicleData paginate eger load list. <<<<<<<<<<");
-                        resultList = AdvanceSearch(advanceSearch, _context.VehicleDatas).Where(vehicleData => vehicleData.IsDeleted == false).ToList();
-                    }
-                    catch (Exception e)
-                    {
-                        _logger.LogError(">>>>>>>>>> Error occur. Get AdvanceSearch result VehicleData paginate eger load list. <<<<<<<<<<" + e);
-                        throw;
-                    }
+                    _logger.LogInformation($">>>>>>>>>> Get AdvanceSearch result VehicleData paginate eager load list. <<<<<<<<<<");
+                    query = query.Include(vehicle => vehicle.FuelType).Where(vehicleData =>
+                (string.IsNullOrEmpty(advanceSearch.POSInstalled) || EF.Property<string>(vehicleData, "POSInstalled") != null && EF.Property<string>(vehicleData, "POSInstalled").ToLower().Contains(advanceSearch.POSInstalled.ToLower())) &&
+                (string.IsNullOrEmpty(advanceSearch.CctvInstalled) || EF.Property<string>(vehicleData, "CctvInstalled") != null && EF.Property<string>(vehicleData, "CctvInstalled").ToLower().Contains(advanceSearch.CctvInstalled.ToLower())) &&
+                (string.IsNullOrEmpty(advanceSearch.TelematicDeviceInstalled) || EF.Property<string>(vehicleData, "TelematicDeviceInstalled") != null && EF.Property<string>(vehicleData, "TelematicDeviceInstalled").ToLower().Contains(advanceSearch.TelematicDeviceInstalled.ToLower())) &&
+                (string.IsNullOrEmpty(advanceSearch.YBSCompany) || EF.Property<string>(vehicleData.YBSCompany, "YBSCompanyName") != null && EF.Property<string>(vehicleData.YBSCompany, "YBSCompanyName").ToLower().Contains(advanceSearch.YBSCompany.ToLower())) &&
+                (string.IsNullOrEmpty(advanceSearch.Manufacturer) || EF.Property<string>(vehicleData.Manufacturer, "ManufacturerName") != null && EF.Property<string>(vehicleData.Manufacturer, "ManufacturerName").ToLower().Contains(advanceSearch.Manufacturer.ToLower())) &&
+                (string.IsNullOrEmpty(advanceSearch.YBSName) || EF.Property<string>(vehicleData, "YBSName") != null && EF.Property<string>(vehicleData, "YBSName").ToLower().Contains(advanceSearch.YBSName.ToLower())) &&
+                (string.IsNullOrEmpty(advanceSearch.FuelType) || EF.Property<string>(vehicleData.FuelType, "FuelTypeName") != null && EF.Property<string>(vehicleData.FuelType, "FuelTypeName").ToLower().Contains(advanceSearch.FuelType.ToLower())));
+
+
                 }
-                else
-                {
-                    _logger.LogInformation($">>>>>>>>>> GetAll VehicleData paginate eger load list. <<<<<<<<<<");
-                    try
-                    {
-                        _logger.LogInformation($">>>>>>>>>> Success. GetAll VehicleData paginate eger load list. <<<<<<<<<<");
-                        resultList = vehicleDatas;
-                    }
-                    catch (Exception e)
-                    {
-                        _logger.LogError(">>>>>>>>>> Error occur. GetAll VehicleData paginate eger load list. <<<<<<<<<<" + e);
-                        throw;
-                    }
-                }
-                _logger.LogInformation($">>>>>>>>>> Success. SearchAll or GetAll SpecialEventInvestigationDept paginate eger load list. <<<<<<<<<<");
-                return GetAllWithPagin(resultList, pageNo, PageSize);
+
+                Console.WriteLine("page no....................." + pageNo);
+                int currentPage = (pageNo.HasValue && pageNo.Value > 0) ? pageNo.Value : 1;
+                Console.WriteLine("cur page....................." + currentPage);
+
+                int skip = (currentPage - 1) * PageSize;
+                Console.WriteLine("skip....................." + skip);
+
+                int totalRecords = query.Count();
+                Console.WriteLine("totalrecords....................." + totalRecords);
+
+                
+                var resultList = query
+                    .Skip(skip)
+                    .Take(PageSize)
+                    .Include(vehicle => vehicle.YBSCompany)
+                    .Include(vehicle => vehicle.YBSType)
+                    .Include(vehicle => vehicle.FuelType)
+                    .Include(vehicle => vehicle.Manufacturer)
+                    .ToList();
+
+                _logger.LogInformation($">>>>>>>>>> Success. SearchAll or GetAll VehicleData paginate eager load list. <<<<<<<<<<");
+
+                PagingList<VehicleData> paginatedList = new PagingList<VehicleData>(resultList, totalRecords, pageNo ?? 0, PageSize);
+
+                return paginatedList;
             }
             catch (Exception e)
             {
-                _logger.LogError(">>>>>>>>>> Error occur. SearchAll or AdvanceSearch or GetAll VehicleData paginate eger load list. <<<<<<<<<<" + e);
+                _logger.LogError(">>>>>>>>>> Error occur. SearchAll or AdvanceSearch or GetAll VehicleData paginate eager load list. <<<<<<<<<<" + e);
                 throw;
             }
         }
+
 
         public PagingList<VehicleData> GetAllVehiclesWithPaginForExcelExport(string searchString, AdvanceSearch advanceSearch, int? pageNo, int PageSize)
         {

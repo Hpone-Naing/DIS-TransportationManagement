@@ -33,8 +33,21 @@
 
                         var nameCell = $('<td/>', {
                             'class': 'name'
-                        }).text(ybsType.text);
+                        });
+
+                        var nameLink = $('<a/>', {
+                            'class': 'text-primary',
+                            'href': '/VehicleData/List?SearchString=' + encodeURIComponent(ybsType.text.split(";")[0]) + '&searchOption=ybsType'
+                        }).text(ybsType.text.split(";")[0]);
+
+                        nameCell.append(nameLink);
                         tr.append(nameCell);
+
+
+                        var totalYBSCountCell = $('<td/>', {
+                            'class': 'name'
+                        }).text(ybsType.text.split(";")[1]);
+                        tr.append(totalYBSCountCell);
 
                         var actionBtnCell = $('<td/>', {
                             'class': 'd-flex justify-content-center align-item-center actionBtn',

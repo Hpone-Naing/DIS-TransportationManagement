@@ -16,5 +16,8 @@ namespace TransportationManagement.Models
         public virtual YBSCompany YBSCompany { get; set; }
         public bool IsDeleted { get; set; }
 
+        [NotMapped]
+        public int TotalYBSNumber { get; set; }
+
     }
 }
